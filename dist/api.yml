@@ -240,7 +240,7 @@ paths:
           description: The score been updated.
         '400':
           description: Game doesn't exist.
-  /representative/addEventCale:
+  /users/addEventCale:
     post:
       tags:
         - Representative
@@ -258,6 +258,28 @@ paths:
           description: A new game calendar has been added to the game.
         '400':
           description: Wrong inpute
+  /users/setReferee:
+    put:
+      tags:
+        - Representative
+      summary: Update Game's referee
+      description: Update Game's referee to the received one from the client.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gameID:
+                  type: integer
+                referee:
+                  type: integer
+      responses:
+        '201':
+          description: The referee been updated.
+        '400':
+          description: Game doesn't exist.
   /getHTML/{Page}:
     get:
       tags:
