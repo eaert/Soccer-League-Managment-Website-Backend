@@ -54,7 +54,7 @@ paths:
                 type: integer
         '400':
           description: Username or Password is wrong.
-  /getDetails:
+  /league/getDetails:
     get:
       tags:
         - Everyone
@@ -69,67 +69,7 @@ paths:
                 type: object
         '404':
           description: An Error been Accur.
-  /getTeam/:teamID:
-    get:
-      tags:
-        - Everyone
-      summary: Get Team.
-      description: Get Team ID from client and return his Teams.
-      responses:
-        '200':
-          description: Successfuly return User's Teams.
-          content:
-            application/json:
-              schema:
-                type: object # decide how much to return
-        '404':
-          description: Team doesn't exists.
-  /getGame/:gameID:
-    get:
-      tags:
-        - Everyone
-      summary: Get Game.
-      description: Get gameID from client and return his Teams.
-      responses:
-        '200':
-          description: Successfuly return Game.
-          content:
-            application/json:
-              schema:
-                type: object
-        '404':
-          description: Game doesn't exists.
-  /getPlayer/:playerID:
-    get:
-      tags:
-        - Everyone
-      summary: Get Player.
-      description: Get playerID from client and return his Teams.
-      responses:
-        '200':
-          description: Successfuly return Game.
-          content:
-            application/json:
-              schema:
-                type: object
-        '404':
-          description: Player doesn't exists.
-  /getCoach/:coachID:
-    get:
-      tags:
-        - Everyone
-      summary: Get Coach.
-      description: Get coachID from client and return his Teams.
-      responses:
-        '200':
-          description: Successfuly return Coach.
-          content:
-            application/json:
-              schema:
-                type: object
-        '404':
-          description: Coach doesn't exists.
-  /favoritePlayers:
+  /users/favoritePlayers:
     post:
       tags:
         - User
@@ -152,7 +92,7 @@ paths:
           description: A new player has been added
         '400':
           description: Wrong inpute parameters
-  /favoriteTeams:
+  /users/favoriteTeams:
     post:
       tags:
         - User
@@ -175,7 +115,7 @@ paths:
           description: A new team has been added
         '400':
           description: Wrong inpute parameters
-  /favoriteGames:
+  /users/favoriteGames:
     post:
       tags:
         - User
@@ -198,7 +138,7 @@ paths:
           description: A new game has been added
         '400':
           description: Wrong inpute parameters
-  /favoriteTeams/:user_id:
+  /users/favoriteTeams/:user_id:
     get:
       tags:
         - User
@@ -213,7 +153,7 @@ paths:
                 type: array
         '404':
           description: User doesn't have Teams.
-  /favoritePlayers/:user_id:
+  /users/favoritePlayers/:user_id:
     get:
       tags:
         - User
@@ -228,7 +168,7 @@ paths:
                 type: array
         '404':
           description: User doesn't have Players.
-  /favoriteGames/:user_id:
+  /users/favoriteGames/:user_id:
     get:
       tags:
         - User
@@ -243,7 +183,7 @@ paths:
                 type: array
         '404':
           description: User doesn't have Gamse.
-  /getReferee/:Referee_id:
+  /users/getReferee/:Referee_id:
     get:
       tags:
         - Representative
@@ -258,7 +198,7 @@ paths:
                 type: object
         '404':
           description: Referee doesn't exists.
-  /addGame:
+  /users/addGame:
     post:
       tags:
         - Representative
@@ -276,7 +216,7 @@ paths:
           description: A new game has been added
         '400':
           description: Wrong inpute parameters
-  /updateScore:
+  /users/updateScore:
     put:
       tags:
         - Representative
@@ -300,7 +240,7 @@ paths:
           description: The score been updated.
         '400':
           description: Game doesn't exist.
-  /addEventCale:
+  /users/addEventCale:
     post:
       tags:
         - Representative
@@ -318,6 +258,28 @@ paths:
           description: A new game calendar has been added to the game.
         '400':
           description: Wrong inpute
+  /users/setReferee:
+    put:
+      tags:
+        - Representative
+      summary: Update Game's referee
+      description: Update Game's referee to the received one from the client.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gameID:
+                  type: integer
+                referee:
+                  type: integer
+      responses:
+        '201':
+          description: The referee been updated.
+        '400':
+          description: Game doesn't exist.
   /getHTML/{Page}:
     get:
       tags:
@@ -384,7 +346,7 @@ paths:
                 type: object
         '404':
           description: Page doesn't exists.
-  /teamFullDetails/:team:
+  /teams/teamFullDetails/:team:
     get:
       tags:
         - Team
@@ -406,6 +368,51 @@ paths:
                 type: object
         '404':
           description: Team doesn't exists.
+  /games/gameFullDetails/:gameID:
+    get:
+      tags:
+        - Everyone
+      summary: Get Game.
+      description: Get gameID from client and return his Teams.
+      responses:
+        '200':
+          description: Successfuly return Game.
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Game doesn't exists.
+  /players/playerFullDetails/:playerID:
+    get:
+      tags:
+        - Everyone
+      summary: Get Player.
+      description: Get playerID from client and return his Teams.
+      responses:
+        '200':
+          description: Successfuly return Game.
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Player doesn't exists.
+  /coaches/coach/:coachID:
+    get:
+      tags:
+        - Everyone
+      summary: Get Coach.
+      description: Get coachID from client and return his Teams.
+      responses:
+        '200':
+          description: Successfuly return Coach.
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Coach doesn't exists.
 components:
   schemas:
     User:
