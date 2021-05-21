@@ -276,18 +276,31 @@ paths:
           description: A new game has been added
         '400':
           description: Wrong inpute parameters
-  /updateScore/:gameID:
+  /updateScore:
     put:
       tags:
         - Representative
       summary: Update Game Score
       description: Update Game Score to the received one from the client.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gameID:
+                  type: integer
+                homeTeamGoals:
+                  type: integer
+                awayTeamGoals:
+                  type: integer
       responses:
         '201':
           description: The score been updated.
         '400':
           description: Game doesn't exist.
-  /addEventCale}:
+  /addEventCale:
     post:
       tags:
         - Representative
@@ -298,7 +311,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GameCalendar'
+              $ref: '#/components/schemas/GameEvent'
         description: Inventory item to add
       responses:
         '201':
@@ -495,14 +508,18 @@ components:
           type: integer
         time:
           type: object
-        houseTeam:
-          type: integer
+        homeTeam:
+          type: string
         awayTeam:
+          type: string
+        homeTeamGoals:
+          type: integer
+        awayTeamGoals:
           type: integer
         field:
           type: string
-        gameCalendar:
-          type: object
+        referee:
+          type: integer
     Coach:
       type: object
       description: Model containing coach info.
@@ -519,12 +536,15 @@ components:
           type: object
         country:
           type: string
-    GameCalendar:
+    GameEvent:
       type: object
       properties:
+        eventType:
+          type: string
+        gameMinute:
+          type: integer
         gameID:
           type: integer
-        events:
-          type: array
-          items:
-            type: object
+        playerID:
+          type: integer
+        
