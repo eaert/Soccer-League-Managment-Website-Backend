@@ -53,4 +53,52 @@ router.get("/favoritePlayers", async (req, res, next) => {
   }
 });
 
+router.get("/favoriteTeams", async (req, res, next) => {
+  try {
+    const user_id = req.session.user_id;
+    const team_ids = await users_utils.getFavoriteTeams(user_id);
+    let team_ids_array = [];
+    team_ids.map((element) => team_ids_array.push(element.team_id)); //extracting the players ids into array
+    const results = await teams_utils.getTeamsInfo(team_ids_array);
+    res.status(200).send(results);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/favoriteGames", async (req, res, next) => {
+  try {
+    const user_id = req.session.user_id;
+    const game_ids = await users_utils.getFavoriteGames(user_id);
+    let game_ids_array = [];
+    game_ids.map((element) => game_ids_array.push(element.game_id)); //extracting the players ids into array
+    const results = await games_utils.getGamesInfo(game_ids_array);
+    res.status(200).send(results);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/favoriteTeams", async (req, res, next) => {
+  try {
+    const user_id = req.session.user_id;
+    const team_id = req.body.team_id;
+    await users_utils.markTeamAsFavorite(user_id, team_id);
+    res.status(200).send("The team successfully saved as favorite")    
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/favoriteGames", async (req, res, next) => {
+  try {
+    const user_id = req.session.user_id;
+    const game_id = req.body.game_id;
+    await users_utils.markGameAsFavorite(user_id, game_id);
+    res.status(200).send("The game successfully saved as favorite")    
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
