@@ -43,7 +43,7 @@ async function isTeamExist(teamName) {
   // will move the referee utils later
   async function isRefereeExist(referee_id) {
     const referee = await DButils.execQuery(
-      `select * from Referee where referee_id='${referee_id}'`
+      `select * from Referee where refereeID='${referee_id}'`
     )
     if (referee.length > 0){
       return true;
