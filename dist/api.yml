@@ -54,6 +54,17 @@ paths:
                 type: integer
         '400':
           description: Username or Password is wrong.
+  /Logout:
+    post:
+      tags:
+        - Auth
+      summary: Logout User from the Web
+      description: Logout User from Web, remove cookie
+      responses:
+        '201':
+          description: Successfuly Logout.
+        '400':
+          description: Logout failed.
   /league/getDetails:
     get:
       tags:
@@ -413,6 +424,21 @@ paths:
                 type: object
         '404':
           description: Coach doesn't exists.
+  /search/:target:
+    get:
+      tags:
+        - Search
+      summary: Search target.
+      description: Search target in the DB and return all results.
+      responses:
+        '200':
+          description: Successfuly return results.
+          content:
+            application/json:
+              schema:
+                type: array
+        '404':
+          description: An error been accur.
 components:
   schemas:
     User:
