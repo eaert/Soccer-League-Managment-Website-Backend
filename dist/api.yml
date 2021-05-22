@@ -57,7 +57,7 @@ paths:
   /league/getDetails:
     get:
       tags:
-        - Everyone
+        - League
       summary: Get League Details.
       description: Get League Details from outsider API.
       responses:
@@ -183,10 +183,10 @@ paths:
                 type: array
         '404':
           description: User doesn't have Gamse.
-  /users/getReferee/:Referee_id:
+  /getReferee/:Referee_id:
     get:
       tags:
-        - Representative
+        - Referee
       summary: Get Referee.
       description: Get Referee_id from client and return his details.
       responses:
@@ -198,7 +198,7 @@ paths:
                 type: object
         '404':
           description: Referee doesn't exists.
-  /users/addGame:
+  /users/Representative/addGame:
     post:
       tags:
         - Representative
@@ -216,7 +216,7 @@ paths:
           description: A new game has been added
         '400':
           description: Wrong inpute parameters
-  /users/updateScore:
+  /users/Representative/updateScore:
     put:
       tags:
         - Representative
@@ -240,7 +240,7 @@ paths:
           description: The score been updated.
         '400':
           description: Game doesn't exist.
-  /users/addEventCale:
+  /users/Representative/addEventCale:
     post:
       tags:
         - Representative
@@ -258,7 +258,7 @@ paths:
           description: A new game calendar has been added to the game.
         '400':
           description: Wrong inpute
-  /users/setReferee:
+  /users/Representative/setReferee:
     put:
       tags:
         - Representative
@@ -371,7 +371,7 @@ paths:
   /games/gameFullDetails/:gameID:
     get:
       tags:
-        - Everyone
+        - Game
       summary: Get Game.
       description: Get gameID from client and return his Teams.
       responses:
@@ -386,7 +386,7 @@ paths:
   /players/playerFullDetails/:playerID:
     get:
       tags:
-        - Everyone
+        - Player
       summary: Get Player.
       description: Get playerID from client and return his Teams.
       responses:
@@ -401,7 +401,7 @@ paths:
   /coaches/coach/:coachID:
     get:
       tags:
-        - Everyone
+        - Coach
       summary: Get Coach.
       description: Get coachID from client and return his Teams.
       responses:
