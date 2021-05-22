@@ -2,7 +2,16 @@ var express = require("express");
 var router = express.Router();
 const game_utils = require("./utils/game_utils");
 
-router.get("/addGame", async (req, res, next) => {
+router.get("/getGame", async (req, res, next) => {
+  try {
+      const game_details = await game_utils.getGame(req.body.gameID);
+      res.send(game_details);
+  } catch (error) {
+      next(error);
+  }
+});
+
+router.post("/addGame", async (req, res, next) => {
   try {
     if (!game_utils.isTeamExist(req.body.homeTeam) || !game_utils.isTeamExist(req.body.awayTeam)){
         throw { status: 400, message: "One of the received Teams don't exist" };
@@ -10,8 +19,8 @@ router.get("/addGame", async (req, res, next) => {
     if (req.body.homeTeamGoals < 0 || req.body.awayTeamGoals < 0){
         throw { status: 400, message: "Team's Goals must be positive number"}
     }
-    await game_utils.createGame(req.body);
-    res.status(201).send("Game created");
+    await game_utils.insertGame(req.body);
+    res.status(201).send("Game been added");
   } catch (error) {
     next(error);
   }
@@ -35,6 +44,18 @@ router.put("/setReferee", async (req, res, next) => {
     res.status(201).send("Game's referee been update.");
   } catch (error) {
     next(error);
+  }
+});
+
+router.post("/addEventCale", async (req, res, next) => {
+  try {
+    if (game_utils.isGameExist(req.data.gameID)){
+      throw { status: 400, message: "Chosen Game doens't exist"}
+    }
+    game_utils.insertGameEvent(req.body);
+    res.status(201).send("GameEvent been added");
+  } catch (error) {
+    next(erroe);
   }
 });
 
