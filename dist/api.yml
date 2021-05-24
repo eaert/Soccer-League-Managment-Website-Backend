@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   description: This is a simple API
   version: "1.0.0"
-  title: Simple Inventory API
+  title: League Management API
   contact:
     email: you@your-company.com
   license:
@@ -194,21 +194,6 @@ paths:
                 type: array
         '404':
           description: User doesn't have Gamse.
-  /getReferee/:Referee_id:
-    get:
-      tags:
-        - Referee
-      summary: Get Referee.
-      description: Get Referee_id from client and return his details.
-      responses:
-        '200':
-          description: Successfuly return Referee.
-          content:
-            application/json:
-              schema:
-                type: object
-        '404':
-          description: Referee doesn't exists.
   /users/Representative/addGame:
     post:
       tags:
@@ -227,6 +212,24 @@ paths:
           description: A new game has been added
         '400':
           description: Wrong inpute parameters
+  /user/Representative/createGameLog:
+    post:
+      tags:
+        - Representative
+      summary: Create Leageue Game Log
+      description: Receive Representative League ID and creat Game Log using League's mechanismPlacement.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: integer
+            description: League ID
+      responses:
+        '201':
+          description: Game Log been created Successfuly.
+        '400':
+          description: League doesn't exists
   /users/Representative/updateScore:
     put:
       tags:
@@ -379,7 +382,51 @@ paths:
                 type: object
         '404':
           description: Team doesn't exists.
-  /games/gameFullDetails/:gameID:
+  /teams/teamDetails/:team:
+    get:
+      tags:
+        - Team
+      summary: Get Team details.
+      description: Get Team details from outer API.
+      parameters: 
+        - in: path
+          name: team
+          description: team name from the client.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfuly return Team's details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '404':
+          description: Team doesn't exists.
+  /teams/teamSchedule/:team:
+    get:
+      tags:
+        - Team
+      summary: Get Team schedule.
+      description: Get Team schedule from outer DB.
+      parameters: 
+        - in: path
+          name: team
+          description: team name from the client.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfuly return Team's schedule.
+          content:
+            application/json:
+              schema:
+                type: array
+        '404':
+          description: Team doesn't exists or doesn't have schedule.
+  /games/gameDetails/:gameID:
     get:
       tags:
         - Game
@@ -391,7 +438,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Game'
         '404':
           description: Game doesn't exists.
   /players/playerFullDetails/:playerID:
@@ -406,7 +453,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Player'
         '404':
           description: Player doesn't exists.
   /coaches/coach/:coachID:
@@ -421,9 +468,24 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Coach'
         '404':
           description: Coach doesn't exists.
+  /getReferee/:Referee_id:
+    get:
+      tags:
+        - Referee
+      summary: Get Referee.
+      description: Get Referee_id from client and return his details.
+      responses:
+        '200':
+          description: Successfuly return Referee.
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Referee doesn't exists.
   /search/:target:
     get:
       tags:
@@ -436,9 +498,31 @@ paths:
           content:
             application/json:
               schema:
-                type: array
+                type: object
+                properties:
+                  freeSearch: 
+                    type: string
+                  precise:
+                    type: string
         '404':
           description: An error been accur.
+  /league/createLeague:
+    post:
+      tags:
+        - League
+      summary: Create League from user's variables
+      description: Get variables from User and create new League from them.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/League'
+      responses:
+        '201':
+          description: League been created Successfuly.
+        '400':
+          description: Wrong inpute
 components:
   schemas:
     User:
@@ -508,6 +592,12 @@ components:
         teamID:
           type: integer
         teamname:
+          type: string
+        shortname:
+          type: string
+        founded:
+          type: integer
+        logo:
           type: string
     Player:
       type: object
@@ -580,4 +670,30 @@ components:
           type: integer
         playerID:
           type: integer
+    Referee:
+      type: object
+      properties:
+        refereeID:
+          type: integer
+          firstname:
+            type: string
+          lastname:
+            type: string
+          nation:
+            type: string
+          occupied:
+            type: string
+    League:
+      type: object
+      properties:
+        leagueID:
+          type: integer
+        leagueName:
+          type: string
+        roundNum:
+          type: integer
+        mechanismPlacement:
+          type: integer
+        Representative:
+          type: string
         
