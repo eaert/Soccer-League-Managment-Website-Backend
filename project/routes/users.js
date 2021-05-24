@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router();
+var app = express();
 const DButils = require("./utils/DButils");
 const users_utils = require("./utils/users_utils");
 const players_utils = require("./utils/players_utils");
@@ -22,6 +23,22 @@ router.use(async function (req, res, next) {
   }
 });
 
+router.use(async function (req, res, next) { 
+  if (req.session && req.session.username) {
+    DButils.execQuery("SELECT Representative FROM Leagues")
+      .then((Representative) => {
+        if (Representative.find((x) => x.Representative === req.session.username)) {
+            next();
+        }
+      })
+      .catch((err) => next(err));
+  } else {
+    res.sendStatus(401);
+  }
+});
+
+// app.use("/Representative", Representative);
+
 /**
  * This path gets body with playerId and save this player in the favorites list of the logged-in user
  */
@@ -39,7 +56,7 @@ router.post("/favoritePlayers", async (req, res, next) => {
 /**
  * This path returns the favorites players that were saved by the logged-in user
  */
-router.get("/favoritePlayers", async (req, res, next) => {
+router.get("/favoritePlayers:username", async (req, res, next) => {
   try {
     const username = req.session.username;
     let favorite_players = {};
@@ -53,7 +70,7 @@ router.get("/favoritePlayers", async (req, res, next) => {
   }
 });
 
-router.get("/favoriteTeams", async (req, res, next) => {
+router.get("/favoriteTeams:username", async (req, res, next) => {
   try {
     const username = req.session.username;
     const team_ids = await users_utils.getFavoriteTeams(username);
@@ -66,7 +83,7 @@ router.get("/favoriteTeams", async (req, res, next) => {
   }
 });
 
-router.get("/favoriteGames", async (req, res, next) => {
+router.get("/favoriteGames:username", async (req, res, next) => {
   try {
     const username = req.session.username;
     const game_ids = await users_utils.getFavoriteGames(username);

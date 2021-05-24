@@ -65,7 +65,7 @@ paths:
           description: Successfuly Logout.
         '400':
           description: Logout failed.
-  /league/getDetails:
+  /leagues/getDetails:
     get:
       tags:
         - League
@@ -93,7 +93,7 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
+                username:
                   type: string
                 player_id:
                   type: string
@@ -116,7 +116,7 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
+                username:
                   type: string
                 team_id:
                   type: string
@@ -139,7 +139,7 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
+                username:
                   type: string
                 game_id:
                   type: string
@@ -149,7 +149,7 @@ paths:
           description: A new game has been added
         '400':
           description: Wrong inpute parameters
-  /users/favoriteTeams/:user_id:
+  /users/favoriteTeams/:username:
     get:
       tags:
         - User
@@ -164,7 +164,7 @@ paths:
                 type: array
         '404':
           description: User doesn't have Teams.
-  /users/favoritePlayers/:user_id:
+  /users/favoritePlayers/:username:
     get:
       tags:
         - User
@@ -179,7 +179,7 @@ paths:
                 type: array
         '404':
           description: User doesn't have Players.
-  /users/favoriteGames/:user_id:
+  /users/favoriteGames/:username:
     get:
       tags:
         - User
@@ -212,7 +212,7 @@ paths:
           description: A new game has been added
         '400':
           description: Wrong inpute parameters
-  /user/Representative/createGameLog:
+  /users/Representative/createGameLog:
     post:
       tags:
         - Representative
@@ -223,8 +223,13 @@ paths:
         content:
           application/json:
             schema:
-              type: integer
-            description: League ID
+              type: object
+              properties:
+                leagueID:
+                  type: string
+                  description: League ID
+                  example: 12
+
       responses:
         '201':
           description: Game Log been created Successfuly.
@@ -423,7 +428,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
+                type: object
         '404':
           description: Team doesn't exists or doesn't have schedule.
   /games/gameDetails/:gameID:
@@ -441,7 +446,7 @@ paths:
                 $ref: '#/components/schemas/Game'
         '404':
           description: Game doesn't exists.
-  /players/playerFullDetails/:playerID:
+  /players/playerDetails/:playerID:
     get:
       tags:
         - Player
@@ -456,7 +461,7 @@ paths:
                 $ref: '#/components/schemas/Player'
         '404':
           description: Player doesn't exists.
-  /coaches/coach/:coachID:
+  /coaches/coachDetails/:coachID:
     get:
       tags:
         - Coach
@@ -471,7 +476,7 @@ paths:
                 $ref: '#/components/schemas/Coach'
         '404':
           description: Coach doesn't exists.
-  /getReferee/:Referee_id:
+  /refereeDetails/:Referee_id:
     get:
       tags:
         - Referee
@@ -502,11 +507,15 @@ paths:
                 properties:
                   freeSearch: 
                     type: string
+                    description: input from user to search
+                    example: Eran
                   precise:
                     type: string
+                    description: specific type to search
+                    example: player
         '404':
           description: An error been accur.
-  /league/createLeague:
+  /leagues/createLeague:
     post:
       tags:
         - League

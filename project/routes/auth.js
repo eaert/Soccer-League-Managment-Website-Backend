@@ -9,7 +9,7 @@ router.post("/Register", async (req, res, next) => {
     // valid parameters
     // username exists
     const users = await DButils.execQuery(
-      "SELECT username FROM dbo.users_tirgul"
+      "SELECT username FROM users"
     );
 
     if (users.find((x) => x.username === req.body.username))
@@ -25,7 +25,7 @@ router.post("/Register", async (req, res, next) => {
     // add the new username
     await DButils.execQuery(
       `INSERT INTO Users VALUES ('${req.body.username}', '${req.body.firstname}', '${req.body.lastname}',
-      '${req.body.country}', '${hash_password}', '${req.body.email}', '${req.body.image_url}')`
+      '${req.body.country}', '${hash_password}', '${req.body.email}', '${req.body.image-url}')`
     );
     res.status(201).send("user created");
   } catch (error) {
@@ -37,7 +37,7 @@ router.post("/Login", async (req, res, next) => {
   try {
     const user = (
       await DButils.execQuery(
-        `SELECT * FROM dbo.users_tirgul WHERE username = '${req.body.username}'`
+        `SELECT * FROM users WHERE username = '${req.body.username}'`
       )
     )[0];
     // user = user[0];

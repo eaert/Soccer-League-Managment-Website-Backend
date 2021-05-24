@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 const game_utils = require("./utils/game_utils");
 
-router.get("/addGame", async (req, res, next) => {
+router.post("/addGame", async (req, res, next) => {
   try {
     if (!game_utils.isTeamExist(req.body.homeTeam) || !game_utils.isTeamExist(req.body.awayTeam)){
         throw { status: 400, message: "One of the received Teams don't exist" };
@@ -28,7 +28,7 @@ router.put("/updateScore", async (req, res, next) => {
 
 router.put("/setReferee", async (req, res, next) => {
   try {
-    if (game_utils.isRefereeExist(req.data.referee)){
+    if (game_utils.isRefereeExist(req.body.referee)){
       throw { status: 400, message: "Requested Referee doens't exist"}
     }
     await game_utils.setReferee(req.body);
@@ -37,5 +37,14 @@ router.put("/setReferee", async (req, res, next) => {
     next(error);
   }
 });
+
+router.get("/gameDetails/:gameID", async (req, res, next) => {
+  try {
+    const details = await game_utils.gameDetails(req.params);
+    res.send(details);
+  } catch (error) {
+    next(error);
+  }
+})
 
 module.exports = router;

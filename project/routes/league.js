@@ -11,4 +11,13 @@ router.get("/getDetails", async (req, res, next) => {
   }
 });
 
+router.post("/createLeague", async (req, res, next) => {
+  try {
+    await league_utils.createLeague(req.body);
+    res.status(201).send("League been created Successfuly");
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
