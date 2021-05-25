@@ -10,13 +10,20 @@ async function teamDetails(teamName) {
           },
         }
       );
+    return extractRelevantTeamData(team);
+}
+
+function extractRelevantTeamData(teams_info) {
+  return teams_info.map((team_info) => {
+    const { id, name, short_code, founded, logo_path } = team_info.data.data;
     return {
-        teamID: team.data.data.id,
-        teamname: team.data.data.name,
-        shortname: team.data.data.short_code,
-        founded: team.data.data.founded,
-        logo: team.data.data.logo_path
+        teamID: id,
+        teamname: name,
+        shortname: short_code,
+        founded: founded,
+        logo: logo_path
     };
+  });
 }
 
 async function teamSchedule(teamName) {

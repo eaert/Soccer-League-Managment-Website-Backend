@@ -53,6 +53,10 @@ const league = require("./routes/league");
 const teams = require("./routes/teams");
 const players = require("./routes/players");
 const games = require("./routes/games");
+const referees = require("./routes/referees");
+const coaches = require("./routes/coaches");
+const search = require("./routes/search");
+
 
 
 //#endregion
@@ -83,6 +87,9 @@ app.use("/league", league);
 app.use("/teams", teams);
 app.use("/games", games);
 app.use("/players", players);
+app.use("/referees", referees);
+app.use("/coaches", coaches);
+app.use("/search", search);
 app.use(auth);
 
 app.use(function (err, req, res, next) {

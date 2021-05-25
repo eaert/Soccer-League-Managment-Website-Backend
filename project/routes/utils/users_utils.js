@@ -4,19 +4,19 @@ var favo_id = 0;
 
 async function markPlayerAsFavorite(username, player_id) {
   await DButils.execQuery(
-    `insert into FavoritePlayers values ('${favo_id++}','${username}',${player_id},'player')`
+    `insert into UserFavorite values('${favo_id++}','${username}',${player_id},'player')`
   );
 }
 
 async function markTeamAsFavorite(username, team_id) {
   await DButils.execQuery(
-    `insert into UserFavorite values ('${favo_id++}','${username}',${team_id},'team')`
+    `insert into UserFavorite values('${favo_id++}','${username}',${team_id},'team')`
   );
 }
 
 async function markGameAsFavorite(username, game_id) {
   await DButils.execQuery(
-    `insert into UserFavorite values ('${favo_id++}','${username}',${game_id},'game')`
+    `insert into UserFavorite values('${favo_id++}','${username}',${game_id},'game')`
   );
 }
 

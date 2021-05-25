@@ -365,7 +365,7 @@ paths:
                 type: object
         '404':
           description: Page doesn't exists.
-  /teams/teamFullDetails/:team:
+  /teams/teamFullDetails/:teamName:
     get:
       tags:
         - Team
@@ -385,9 +385,19 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  team:
+                    type: object
+                    description: team details
+                  players:
+                    type: object
+                    description: team squad
+                  coach:
+                    type: object
+                    description: team's coach
         '404':
           description: Team doesn't exists.
-  /teams/teamDetails/:team:
+  /teams/teamDetails/:teamName:
     get:
       tags:
         - Team
@@ -409,7 +419,7 @@ paths:
                 $ref: '#/components/schemas/Team'
         '404':
           description: Team doesn't exists.
-  /teams/teamSchedule/:team:
+  /teams/teamSchedule/:teamName:
     get:
       tags:
         - Team
@@ -476,7 +486,7 @@ paths:
                 $ref: '#/components/schemas/Coach'
         '404':
           description: Coach doesn't exists.
-  /refereeDetails/:Referee_id:
+  /referees/refereeDetails/:Referee_id:
     get:
       tags:
         - Referee
@@ -491,12 +501,23 @@ paths:
                 type: object
         '404':
           description: Referee doesn't exists.
-  /search/:target:
-    get:
+  /search:
+    post:
       tags:
         - Search
       summary: Search target.
       description: Search target in the DB and return all results.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                freeSearch:
+                  type: string
+                precise:
+                  type: string
       responses:
         '200':
           description: Successfuly return results.
@@ -505,14 +526,12 @@ paths:
               schema:
                 type: object
                 properties:
-                  freeSearch: 
-                    type: string
-                    description: input from user to search
-                    example: Eran
-                  precise:
-                    type: string
-                    description: specific type to search
-                    example: player
+                  players: 
+                    type: object
+                    description: players search results
+                  teams:
+                    type: object
+                    description: teams search results
         '404':
           description: An error been accur.
   /leagues/createLeague:
@@ -570,7 +589,7 @@ components:
           format: email
           description: User's email
           example: google@google.com
-        image-url:
+        image_url:
           type: string
           format: URL
           description: URL for the user's image profile.

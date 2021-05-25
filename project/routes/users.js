@@ -23,7 +23,7 @@ router.use(async function (req, res, next) {
   }
 });
 
-router.use(async function (req, res, next) { 
+router.use("/Representative" ,async function (req, res, next) { 
   if (req.session && req.session.username) {
     DButils.execQuery("SELECT Representative FROM Leagues")
       .then((Representative) => {
@@ -45,9 +45,31 @@ router.use(async function (req, res, next) {
 router.post("/favoritePlayers", async (req, res, next) => {
   try {
     const username = req.session.username;
-    const player_id = req.body.playerId;
+    const player_id = req.body.player_id;
     await users_utils.markPlayerAsFavorite(username, player_id);
     res.status(201).send("The player successfully saved as favorite");
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/favoriteTeams", async (req, res, next) => {
+  try {
+    const username = req.session.username;
+    const team_id = req.body.team_id;
+    await users_utils.markTeamAsFavorite(username, team_id);
+    res.status(200).send("The team successfully saved as favorite")    
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/favoriteGames", async (req, res, next) => {
+  try {
+    const username = req.session.username;
+    const game_id = req.body.game_id;
+    await users_utils.markGameAsFavorite(username, game_id);
+    res.status(200).send("The game successfully saved as favorite")    
   } catch (error) {
     next(error);
   }
@@ -91,28 +113,6 @@ router.get("/favoriteGames:username", async (req, res, next) => {
     game_ids.map((element) => game_ids_array.push(element.game_id)); //extracting the players ids into array
     const results = await games_utils.getGamesInfo(game_ids_array);
     res.status(200).send(results);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.post("/favoriteTeams", async (req, res, next) => {
-  try {
-    const username = req.session.username;
-    const team_id = req.body.team_id;
-    await users_utils.markTeamAsFavorite(username, team_id);
-    res.status(200).send("The team successfully saved as favorite")    
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.post("/favoriteGames", async (req, res, next) => {
-  try {
-    const username = req.session.username;
-    const game_id = req.body.game_id;
-    await users_utils.markGameAsFavorite(username, game_id);
-    res.status(200).send("The game successfully saved as favorite")    
   } catch (error) {
     next(error);
   }

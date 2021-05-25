@@ -35,10 +35,12 @@ async function getPlayersInfo(players_ids_list) {
 
 function extractRelevantPlayerData(players_info) {
   return players_info.map((player_info) => {
-    const { fullname, image_path, position_id } = player_info.data.data;
+    const { playerID, firstname, lastname, image_path, position_id } = player_info.data.data;
     const { name } = player_info.data.data.team.data;
     return {
-      name: fullname,
+      playerID: playerID,
+      firstname: firstname,
+      lastname: lastname,
       image: image_path,
       position: position_id,
       team_name: name,
@@ -60,7 +62,7 @@ async function playerDetails(playerID) {
           api_token: process.env.api_token,
       },
   });
-  res.send({
+  return {
       playerID: player.data.data.player_id,
       firstname: player.data.data.firstname,
       lastname: player.data.data.lastname,
@@ -71,7 +73,7 @@ async function playerDetails(playerID) {
       country: player.data.data.birthcountry,
       weight: player.data.data.weight,
       height: player.data.data.height
-  });
+  };
 }
 
 exports.getPlayersByTeam = getPlayersByTeam;

@@ -1,6 +1,6 @@
 const axios = require("axios");
 const DButils = require("./DButils");
-const game_utils = require("./game_utils");
+const games_utils = require("./games_utils");
 const LEAGUE_ID = 271;
 
 async function getLeagueDetails() {
@@ -54,8 +54,7 @@ async function createGameLog(data) {
         return;
       } else {
         promises.push(
-          // need to check months.seasonDetails.month if crushing
-          DButils.execQuery(`insert into Games values(${game_utils.generateGameID++}, ${new Date(seasonDetails.year, seasonDetails.month, seasonDetails.day, seasonDetails.hours, seasonDetails.minutes)}, ${homeTeam}, ${awayTeam}, 0, 0, ${homeTeam + 'Stadium'})`)
+          DButils.execQuery(`insert into Games values(${games_utils.generateGameID++}, ${new Date(seasonDetails.year, seasonDetails.month, seasonDetails.day, seasonDetails.hours, seasonDetails.minutes)}, ${homeTeam}, ${awayTeam}, 0, 0, ${homeTeam + 'Stadium'})`)
         )
         let day = parseInt(seasonDetails.day) + 7;
         if (day > 30) {
