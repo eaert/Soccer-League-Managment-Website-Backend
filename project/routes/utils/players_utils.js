@@ -3,15 +3,15 @@ const DButils = require("./DButils");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 // const TEAM_ID = "85";
 
-async function getPlayerIdsByTeam(team_id) {
+async function getPlayerIdsByTeam(teamName) {
   let player_ids_list = [];
-  const team = await axios.get(`${api_domain}/teams/${team_id}`, {
+  const team = await axios.get(`${api_domain}/teams/search/${teamName}`, {
     params: {
       include: "squad",
       api_token: process.env.api_token,
     },
   });
-  team.data.data.squad.data.map((player) =>
+  team.data.data[0].squad.data.map((player) =>
     player_ids_list.push(player.player_id)
   );
   return player_ids_list;
@@ -35,7 +35,7 @@ async function getPlayersInfo(players_ids_list) {
 
 function extractRelevantPlayerData(players_info) {
   return players_info.map((player_info) => {
-    const { playerID, firstname, lastname, image_path, position_id } = player_info.data.data;
+    const { playerID, firstname, lastname, image_path, position_id, nationality } = player_info.data.data;
     const { name } = player_info.data.data.team.data;
     return {
       playerID: playerID,
@@ -43,6 +43,7 @@ function extractRelevantPlayerData(players_info) {
       lastname: lastname,
       image: image_path,
       position: position_id,
+      nation: nationality,
       team_name: name,
     };
   });
@@ -58,7 +59,7 @@ async function playerDetails(playerID) {
   const player = await axios.get(`https://soccer.sportmonks.com/api/v2.0/players/${playerID}`,
   {
       params: {
-          include: "Team",
+          include: "team",
           api_token: process.env.api_token,
       },
   });
@@ -66,7 +67,7 @@ async function playerDetails(playerID) {
       playerID: player.data.data.player_id,
       firstname: player.data.data.firstname,
       lastname: player.data.data.lastname,
-      playerteam: player.data.data.name,
+      playerteam: player.data.data.team.data.name,
       position: player.data.data.position_id,
       nation: player.data.data.nationality,
       birthday: player.data.data.birthday,
@@ -79,3 +80,4 @@ async function playerDetails(playerID) {
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getPlayersInfo = getPlayersInfo;
 exports.playerDetails = playerDetails;
+exports.extractRelevantPlayerData = extractRelevantPlayerData;

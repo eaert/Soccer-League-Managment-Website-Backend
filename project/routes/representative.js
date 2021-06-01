@@ -1,8 +1,8 @@
 var express = require("express");
 var router = express.Router();
-const representative_utils = require("./utils/representative_utils");
 const game_utils = require("./utils/game_utils");
 const league_utils = require("./utils/league_utils");
+const auth_utils = require("./utils/auth_utils");
 
 router.post("/addGame", async (req, res, next) => {
     try {
@@ -48,3 +48,13 @@ router.put("/setReferee", async (req, res, next) => {
         next(error);
     }
 });
+
+router.post("/signupReferee", async (req, res, next) => {
+  try {
+    await auth_utils.Register(req.body);
+    console.log("Invitation was sent to: " + req.body.email);
+    res.status(201).send("Referee created and email was sent.")
+  } catch (error) {
+    next(error);
+  }
+})

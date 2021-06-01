@@ -1,22 +1,21 @@
+const axios = require("axios");
 const DButils = require("./DButils");
-
-var favo_id = 0;
 
 async function markPlayerAsFavorite(username, player_id) {
   await DButils.execQuery(
-    `insert into UserFavorite values('${favo_id++}','${username}',${player_id},'player')`
+    `insert into UserFavorite values('${username}',${player_id},'player')`
   );
 }
 
 async function markTeamAsFavorite(username, team_id) {
   await DButils.execQuery(
-    `insert into UserFavorite values('${favo_id++}','${username}',${team_id},'team')`
+    `insert into UserFavorite values('${username}',${team_id},'team')`
   );
 }
 
 async function markGameAsFavorite(username, game_id) {
   await DButils.execQuery(
-    `insert into UserFavorite values('${favo_id++}','${username}',${game_id},'game')`
+    `insert into UserFavorite values('${username}',${game_id},'game')`
   );
 }
 
@@ -25,28 +24,28 @@ async function getFavoritePlayers(username) {
     `select targetID from UserFavorite where username='${username}' and type='player'`
   );
   let promises = [];
-  players_ids_list.map((id) =>
+  player_ids.map((player) =>
     promises.push(
-      axios.get(`${process.env.api_domain}/players/${id}`, {
+      axios.get(`${process.env.api_domain}/players/${player.targetID}`, {
         params: {
+          include: 'team',
           api_token: process.env.api_token,
         },
       })
     )
   );
   let players_info = await Promise.all(promises);
-  // return extractRelevantPlayerData(players_info);
   return players_info;
 }
 
 async function getFavoriteTeams(username) {
   const team_ids = await DButils.execQuery(
-    `select team_id from FavoriteTeams where username='${username}'`
+    `select targetID from UserFavorite where username='${username}' and type='Team'`
   );
   let promises = [];
-  team_ids.map((id) =>
+  team_ids.map((team) =>
     promises.push(
-      axios.get(`${process.env.api_domain}/players/${id}`, {
+      axios.get(`${process.env.api_domain}/teams/${team.targetID}`, {
         params: {
           api_token: process.env.api_token,
         },
@@ -59,16 +58,20 @@ async function getFavoriteTeams(username) {
 
 async function getFavoriteGames(username) {
   const game_ids = await DButils.execQuery(
-    `select game_id from UserFavorite where username='${username}'`
+    `select targetID from UserFavorite where username='${username}' and type='Game'`
   );
   let promises = [];
   game_ids.map((id) =>
     promises.push(
-      DButils.execQuery("select * from Games, Referees WHERE Games.referee=Referees.refereeID") // TODO need to check if the query is right
+      DButils.execQuery(`select * from Games WHERE gameID='${id}'`) // TODO need to check if the query is right
     )
   );
   let games_info = await Promise.all(promises);
   return games_info;
+}
+
+async function deleteFavo(username, data) {
+  await DButils.execQuery(`delete from UserFavorite where username=${username} and targetID=${data.targetID} and type=${data.type}`);
 }
 
 exports.markPlayerAsFavorite = markPlayerAsFavorite;
@@ -77,3 +80,4 @@ exports.markGameAsFavorite = markGameAsFavorite;
 exports.getFavoritePlayers = getFavoritePlayers;
 exports.getFavoriteTeams = getFavoriteTeams;
 exports.getFavoriteGames = getFavoriteGames;
+exports.deleteFavo = deleteFavo;

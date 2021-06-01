@@ -4,6 +4,7 @@ var app = express();
 const DButils = require("./utils/DButils");
 const users_utils = require("./utils/users_utils");
 const players_utils = require("./utils/players_utils");
+const teams_utils = require("./utils/teams_utils");
 
 /**
  * Authenticate all incoming requests by middleware
@@ -78,44 +79,45 @@ router.post("/favoriteGames", async (req, res, next) => {
 /**
  * This path returns the favorites players that were saved by the logged-in user
  */
-router.get("/favoritePlayers:username", async (req, res, next) => {
+router.get("/favoritePlayers", async (req, res, next) => {
   try {
     const username = req.session.username;
-    let favorite_players = {};
-    const player_ids = await users_utils.getFavoritePlayers(username);
-    let player_ids_array = [];
-    player_ids.map((element) => player_ids_array.push(element.player_id)); //extracting the players ids into array
-    const results = await players_utils.getPlayersInfo(player_ids_array);
-    res.status(200).send(results);
+    const players = await users_utils.getFavoritePlayers(username);
+    let player_array = players_utils.extractRelevantPlayerData(players);
+    res.status(200).send(player_array);
   } catch (error) {
     next(error);
   }
 });
 
-router.get("/favoriteTeams:username", async (req, res, next) => {
+router.get("/favoriteTeams", async (req, res, next) => {
   try {
     const username = req.session.username;
-    const team_ids = await users_utils.getFavoriteTeams(username);
-    let team_ids_array = [];
-    team_ids.map((element) => team_ids_array.push(element.team_id)); //extracting the players ids into array
-    const results = await teams_utils.getTeamsInfo(team_ids_array);
-    res.status(200).send(results);
+    const teams = await users_utils.getFavoriteTeams(username);
+    let team_array = teams_utils.extractRelevantTeamData(teams);
+    res.status(200).send(team_array);
   } catch (error) {
     next(error);
   }
 });
 
-router.get("/favoriteGames:username", async (req, res, next) => {
+router.get("/favoriteGames", async (req, res, next) => {
   try {
     const username = req.session.username;
-    const game_ids = await users_utils.getFavoriteGames(username);
-    let game_ids_array = [];
-    game_ids.map((element) => game_ids_array.push(element.game_id)); //extracting the players ids into array
-    const results = await games_utils.getGamesInfo(game_ids_array);
-    res.status(200).send(results);
+    const games = await users_utils.getFavoriteGames(username);
+    res.status(200).send(games);
   } catch (error) {
     next(error);
   }
 });
+
+router.delete("/users/deleteFavo/{targetID, type}", async (req, res, next) => {
+    try {
+      await users_utils.deleteFavo(req.session.username, req.params);
+      res.status(200).send("Target was removed.")
+    } catch (error) {
+      next(error);
+    }
+})
 
 module.exports = router;

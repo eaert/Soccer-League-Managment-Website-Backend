@@ -54,7 +54,7 @@ async function createGameLog(data) {
         return;
       } else {
         promises.push(
-          DButils.execQuery(`insert into Games values(${games_utils.generateGameID++}, ${new Date(seasonDetails.year, seasonDetails.month, seasonDetails.day, seasonDetails.hours, seasonDetails.minutes)}, ${homeTeam}, ${awayTeam}, 0, 0, ${homeTeam + 'Stadium'})`)
+          DButils.execQuery(`insert into Games values(${new Date(seasonDetails.year, seasonDetails.month, seasonDetails.day, seasonDetails.hours, seasonDetails.minutes)}, ${homeTeam}, ${awayTeam}, 0, 0, ${homeTeam + 'Stadium'})`)
         )
         let day = parseInt(seasonDetails.day) + 7;
         if (day > 30) {

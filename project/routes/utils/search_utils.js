@@ -2,6 +2,7 @@ const axios = require("axios");
 const DButils = require("./DButils");
 const players_utils = require("./players_utils");
 const teams_utils = require("./teams_utils");
+const filter = require("./filter");
 
 async function searchByName(freeSearch, precise) {
     var search_results = {players: {}, teams: {}}
@@ -10,11 +11,12 @@ async function searchByName(freeSearch, precise) {
             `${process.env.api_domain}/players/search/${freeSearch}`,
             {
               params: {
+                include: 'team',
                 api_token: process.env.api_token,
               },
             }
           );
-        search_results.players = await players_utils.getPlayersInfo(players);
+        search_results.players = await filter.filterPlayers(players.data.data);
     }
     if (precise === "team" || !precise) {
         const teams = await axios.get(
@@ -25,7 +27,7 @@ async function searchByName(freeSearch, precise) {
               },
             }
           );
-        search_results.players = await teams_utils.teamDetails(teams);
+        search_results.players = await filter.filterTeams(teams.data.data);
     }
     return search_results;
 }

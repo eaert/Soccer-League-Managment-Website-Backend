@@ -1,10 +1,6 @@
 const DButils = require("./DButils");
 const axios = require("axios");
 
-var generateGameID = 0;
-var generateGameEventID = 0;
-
-
 // will move to team utils later
 async function isTeamExist(teamName) {
   const team = await axios.get(
@@ -24,19 +20,19 @@ async function isTeamExist(teamName) {
 }
 
 async function isRefereeExist(referee_id) {
-  const referee = await DButils.execQuery(
-    `select * from Referee where refereeID='${referee_id}'`
-  )
-  if (referee.length > 0){
+  try {
+    const referee = await DButils.execQuery(
+      `select * from Referee where refereeID='${referee_id}'`
+    )
     return true;
-  } else {
+  } catch (error) {
     return false;
   }
 }
 
 async function createGame(data) {
   await DButils.execQuery(
-    `insert into Game values (${generateGameID++},${data.time}, '${data.homeTeam}', '${data.awayTeam}',
+    `insert into Game values (${data.time}, '${data.homeTeam}', '${data.awayTeam}',
       ${data.homeTeamGoals}, ${data.awayTeamGoals}, '${data.field}', ${data.referee})`
   );
 }
@@ -54,12 +50,25 @@ async function setReferee(data) {
 }
 
 async function addEventCale(data) {
-  await DButils.execQuery(`insert into GameEvent values(${generateGameEventID++}, ${data.eventType}, ${data.gameMinute}, ${data.gameID}, ${data.playerID})`);
+  await DButils.execQuery(`insert into GameEvent values( ${data.eventType}, ${data.gameMinute}, ${data.gameID}, ${data.playerID})`);
 }
 
 async function gameDetails(gameID) {
-  const game = await DButils.execQuery(`select * from Games where gameID=${gameID}`);
-  return game;
+  try {
+    const game = await DButils.execQuery(`select * from Games where gameID=${gameID}`);
+    return game;
+  } catch (error) {
+    return undefined;
+  }
+}
+
+async function getGamesByTeamName(teamName) {
+  try{
+    const games = await DButils.execQuery(`select * from Games where homeTeam=${teamName} or awayTeam=${teamName}`);
+    return games;
+  } catch (error) {
+    return [];
+  }
 }
 
 exports.isTeamExist = isTeamExist;
@@ -68,5 +77,5 @@ exports.gameDetails = gameDetails;
 exports.updateGameScore = updateGameScore;
 exports.setReferee = setReferee;
 exports.isRefereeExist = isRefereeExist;
-exports.generateGameID = generateGameID;
 exports.addEventCale = addEventCale;
+exports.getGamesByTeamName = getGamesByTeamName;

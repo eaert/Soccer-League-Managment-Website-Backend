@@ -93,10 +93,9 @@ paths:
             schema:
               type: object
               properties:
-                username:
-                  type: string
                 player_id:
-                  type: string
+                  type: integer
+                  example: 172104
         description: Inventory item to add
       responses:
         '201':
@@ -116,10 +115,9 @@ paths:
             schema:
               type: object
               properties:
-                username:
-                  type: string
                 team_id:
-                  type: string
+                  type: integer
+                  example: 939
         description: Inventory item to add
       responses:
         '201':
@@ -139,17 +137,16 @@ paths:
             schema:
               type: object
               properties:
-                username:
-                  type: string
                 game_id:
-                  type: string
+                  type: integer
+                  example: 0
         description: Inventory item to add
       responses:
         '201':
           description: A new game has been added
         '400':
           description: Wrong inpute parameters
-  /users/favoriteTeams/:username:
+  /users/favoriteTeams:
     get:
       tags:
         - User
@@ -161,10 +158,10 @@ paths:
           content:
             application/json:
               schema:
-                type: array
+                type: object
         '404':
           description: User doesn't have Teams.
-  /users/favoritePlayers/:username:
+  /users/favoritePlayers:
     get:
       tags:
         - User
@@ -176,10 +173,10 @@ paths:
           content:
             application/json:
               schema:
-                type: array
+                type: object
         '404':
           description: User doesn't have Players.
-  /users/favoriteGames/:username:
+  /users/favoriteGames:
     get:
       tags:
         - User
@@ -191,9 +188,33 @@ paths:
           content:
             application/json:
               schema:
-                type: array
+                type: object
         '404':
           description: User doesn't have Gamse.
+  /users/deleteFavo/{targetID, type}:
+    delete:
+      tags:
+        - User
+      summary: Delete TargetID.
+      description: Receive TargetID and type from client and remove them from Table.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tragetID:
+                  type: integer
+                  example: 939
+                type:
+                  type: string
+                  example: player
+      responses:
+        '200':
+          description: Successfuly removed TargetID from table.
+        '404':
+          description: an Error been accur.
   /users/Representative/addGame:
     post:
       tags:
@@ -275,6 +296,24 @@ paths:
       responses:
         '201':
           description: A new game calendar has been added to the game.
+        '400':
+          description: Wrong inpute
+  /users/Representative/signupReferee:
+    post:
+      tags:
+        - Representative
+      summary: Signup new Referee to the system.
+      description: receive Referee details and sign him. 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Referee'
+        description: Inventory item to add
+      responses:
+        '201':
+          description: A new Referee been created.
         '400':
           description: Wrong inpute
   /users/Representative/setReferee:

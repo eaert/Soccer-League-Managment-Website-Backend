@@ -10,7 +10,8 @@ async function teamDetails(teamName) {
           },
         }
       );
-    return extractRelevantTeamData(team);
+      team.data.data = team.data.data[0];
+    return extractRelevantTeamData([team]);
 }
 
 function extractRelevantTeamData(teams_info) {
@@ -33,3 +34,4 @@ async function teamSchedule(teamName) {
 
 exports.teamDetails = teamDetails;
 exports.teamSchedule = teamSchedule;
+exports.extractRelevantTeamData = extractRelevantTeamData;
