@@ -28,7 +28,7 @@ function extractRelevantTeamData(teams_info) {
 }
 
 async function teamSchedule(teamName) {
-    const games = await DButils.execQuery(`select * from Games where homeTeam=${teamName} or awayTeam=${teamName}`);
+    const games = await DButils.execQuery(`select * from Games where homeTeam='${teamName}' or awayTeam='${teamName}'`);
     return games;
 }
 

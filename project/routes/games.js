@@ -16,15 +16,6 @@ router.use("/addGame" ,async function (req, res, next) {
   }
 });
 
-router.post("/addGame", async (req, res, next) => {
-  try {
-    await games_utils.createGame(req.body);
-    res.status(201).send("Game created");
-  } catch (error) {
-    next(error);
-  }
-});
-
 router.put("/updateScore", async (req, res, next) => {
   try {
     await games_utils.updateGameScore(req.body);

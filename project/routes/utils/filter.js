@@ -3,8 +3,10 @@ const DButils = require("./DButils");
 
 async function filterTeams(data) {
     var filterData = [];
+    const teams_DB = await DButils.execQuery(`select teamID from Teams`);
+    const teamsID = teams_DB.map(x => x.teamID)
     data.forEach(team => {
-        if (team.current_season_id == process.env.season_id) {
+        if (teamsID.includes(team.id)) {
             filterData.push({
                 teamID: team.id,
                 teamname: team.name,
@@ -19,16 +21,17 @@ async function filterTeams(data) {
 
 async function filterPlayers(data) {
     var filterData = [];
-    const teamsID = await DButils.execQuery(`select teamID from Teams`);
+    const teams_DB = await DButils.execQuery(`select teamID from Teams`);
+    const teamsID = teams_DB.map(x => x.teamID)
     data.forEach(player => {
-        if (player.team_id in teamsID) {
+        if (teamsID.includes(player.team_id)) {
             filterData.push({
-                playerID: player_id,
-                firstname: firstname,
-                lastname: lastname,
-                image: image_path,
-                position: position_id,
-                nation: nationality,
+                playerID: player.player_id,
+                firstname: player.firstname,
+                lastname: player.lastname,
+                image: player.image_path,
+                position: player.position_id,
+                nation: player.nationality,
                 team_name: player.team.data.name,
             });
         }

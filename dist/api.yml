@@ -249,7 +249,7 @@ paths:
                 leagueID:
                   type: string
                   description: League ID
-                  example: 12
+                  example: 1
 
       responses:
         '201':
@@ -309,7 +309,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Referee'
+              $ref: '#/components/schemas/User'
         description: Inventory item to add
       responses:
         '201':
@@ -495,6 +495,19 @@ paths:
                 $ref: '#/components/schemas/Game'
         '404':
           description: Game doesn't exists.
+  /games/getGameLogs/:gameIDs:
+    get:
+      tags:
+        - Game
+      summary: Get Game logs
+      description: Get Game logs for received games ID.
+      response:
+        '200':
+          description: Successfuly return Game Logs.
+          content:
+            application/json:
+              schema:
+                type: object
   /players/playerDetails/:playerID:
     get:
       tags:
@@ -554,9 +567,9 @@ paths:
               type: object
               properties:
                 freeSearch:
-                  type: string
+                  type: array
                 precise:
-                  type: string
+                  type: array
       responses:
         '200':
           description: Successfuly return results.
@@ -696,8 +709,10 @@ components:
       properties:
         gameID:
           type: integer
-        time:
-          type: object
+        date:
+          type: string
+        hours:
+          type: string
         homeTeam:
           type: string
         awayTeam:
@@ -742,14 +757,14 @@ components:
       properties:
         refereeID:
           type: integer
-          firstname:
-            type: string
-          lastname:
-            type: string
-          nation:
-            type: string
-          occupied:
-            type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        nation:
+          type: string
+        occupied:
+          type: string
     League:
       type: object
       properties:

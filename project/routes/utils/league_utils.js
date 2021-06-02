@@ -31,7 +31,7 @@ async function getLeagueDetails() {
 
 async function createLeague(data) {
   await DButils.execQuery(
-    `insert into Leagues values (${data.leagueID},'${data.leagueName}', ${data.roundNum}, ${data.mechanismPlacement},
+    `insert into Leagues values ('${data.leagueName}', ${data.roundNum}, ${data.mechanismPlacement},
      '${data.Representative}')`
   );
 }
@@ -44,28 +44,29 @@ async function createGameLog(data) {
   teams.forEach(homeTeam => {
     let seasonDetails = {
       year: '2021',
-      month: '0',
-      day: '1',
-      hours: '21',
-      minutes: '45'
+      month: '1',
+      day: '1'
     }
     teams.forEach(awayTeam => {
       if (homeTeam === awayTeam) {
         return;
       } else {
+        var date = `${seasonDetails.year}-${seasonDetails.month}-${seasonDetails.day}`;
         promises.push(
-          DButils.execQuery(`insert into Games values(${new Date(seasonDetails.year, seasonDetails.month, seasonDetails.day, seasonDetails.hours, seasonDetails.minutes)}, ${homeTeam}, ${awayTeam}, 0, 0, ${homeTeam + 'Stadium'})`)
+          DButils.execQuery(`insert into Games values('${date}', '21:45', '${homeTeam.teamName}', '${awayTeam.teamName}', -1, -1, '${'Stadium'}', 0)`)
         )
         let day = parseInt(seasonDetails.day) + 7;
         if (day > 30) {
-          seasonDetails.month = toString(parseInt(sessionStorage.month) + 1);
+          let month = parseInt(seasonDetails.month) + 1;
+          seasonDetails.month = month.toString();
           seasonDetails.day = '1';
           if (seasonDetails.month > 12) {
-            seasonDetails.year = toString(parseInt(sessionStorage.year) + 1);
-            seasonDetails.month = '0';
+            let year = parseInt(seasonDetails.year) + 1;
+            seasonDetails.year = year.toString();
+            seasonDetails.month = '1';
           }
         } else {
-          seasonDetails.day = toString(day);
+          seasonDetails.day = day.toString();
         }
       }
     });

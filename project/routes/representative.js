@@ -1,8 +1,23 @@
+const DButils = require("./utils/DButils");
 var express = require("express");
 var router = express.Router();
-const game_utils = require("./utils/game_utils");
+const game_utils = require("./utils/games_utils");
 const league_utils = require("./utils/league_utils");
 const auth_utils = require("./utils/auth_utils");
+
+router.use(async function (req, res, next) { 
+  if (req.session && req.session.username) {
+    DButils.execQuery("SELECT Representative FROM Leagues")
+      .then((Representative) => {
+        if (Representative.find((x) => x.Representative === req.session.username)) {
+            next();
+        }
+      })
+      .catch((err) => next(err));
+  } else {
+    res.sendStatus(401);
+  }
+});
 
 router.post("/addGame", async (req, res, next) => {
     try {
@@ -58,3 +73,5 @@ router.post("/signupReferee", async (req, res, next) => {
     next(error);
   }
 })
+
+module.exports = router;

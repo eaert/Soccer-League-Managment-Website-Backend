@@ -83,7 +83,7 @@ app.get("/alive", (req, res) => res.send("I'm alive"));
 
 // Routings
 app.use("/users", users);
-app.use("/league", league);
+app.use("/leagues", league);
 app.use("/teams", teams);
 app.use("/games", games);
 app.use("/players", players);

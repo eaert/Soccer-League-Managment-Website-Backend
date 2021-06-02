@@ -11,6 +11,9 @@ async function coachDetailsByTeamName(teamName) {
           },
         }
     );
+    let team = coach.data.data.name;
+    coach.data.data = coach.data.data[0].coach.data;
+    coach.data.data.name = team;
     return extractRelevantCoachData(coach);
 }
 
@@ -27,12 +30,12 @@ async function coachDetailsByID(coachID) {
 }
 
 function extractRelevantCoachData(coach_info) {
-  const { coach_id, firstname, lastname, nationality, birthdate, birthcountry } = coach_info.data.data[0].coach.data;
+  const { coach_id, firstname, lastname, nationality, birthdate, birthcountry, team } = coach_info.data.data;
   return {
     coachID: coach_id,
     firstname: firstname,
     lastname: lastname,
-    teamname: coach_info.data.data[0].name,
+    teamname: team,
     nationality: nationality,
     birthday: birthdate,
     birthcountry: birthcountry,

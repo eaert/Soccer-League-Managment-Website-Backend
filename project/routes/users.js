@@ -6,6 +6,8 @@ const users_utils = require("./utils/users_utils");
 const players_utils = require("./utils/players_utils");
 const teams_utils = require("./utils/teams_utils");
 
+const Representative = require("../routes/representative");
+
 /**
  * Authenticate all incoming requests by middleware
  */
@@ -24,21 +26,7 @@ router.use(async function (req, res, next) {
   }
 });
 
-router.use("/Representative" ,async function (req, res, next) { 
-  if (req.session && req.session.username) {
-    DButils.execQuery("SELECT Representative FROM Leagues")
-      .then((Representative) => {
-        if (Representative.find((x) => x.Representative === req.session.username)) {
-            next();
-        }
-      })
-      .catch((err) => next(err));
-  } else {
-    res.sendStatus(401);
-  }
-});
-
-// app.use("/Representative", Representative);
+router.use("/Representative", Representative);
 
 /**
  * This path gets body with playerId and save this player in the favorites list of the logged-in user

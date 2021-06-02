@@ -32,7 +32,7 @@ async function isRefereeExist(referee_id) {
 
 async function createGame(data) {
   await DButils.execQuery(
-    `insert into Game values (${data.time}, '${data.homeTeam}', '${data.awayTeam}',
+    `insert into Games values ('${data.time}', '${data.hours}', '${data.homeTeam}', '${data.awayTeam}',
       ${data.homeTeamGoals}, ${data.awayTeamGoals}, '${data.field}', ${data.referee})`
   );
 }
@@ -50,7 +50,7 @@ async function setReferee(data) {
 }
 
 async function addEventCale(data) {
-  await DButils.execQuery(`insert into GameEvent values( ${data.eventType}, ${data.gameMinute}, ${data.gameID}, ${data.playerID})`);
+  await DButils.execQuery(`insert into GameEvent values('${data.eventType}', ${data.gameMinute}, ${data.gameID}, ${data.playerID})`);
 }
 
 async function gameDetails(gameID) {

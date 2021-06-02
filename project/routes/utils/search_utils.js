@@ -5,7 +5,7 @@ const teams_utils = require("./teams_utils");
 const filter = require("./filter");
 
 async function searchByName(freeSearch, precise) {
-    var search_results = {players: {}, teams: {}}
+    var search_results = {players: [], teams: []}
     if (precise === "player" || !precise) {
         const players = await axios.get(
             `${process.env.api_domain}/players/search/${freeSearch}`,
@@ -27,7 +27,7 @@ async function searchByName(freeSearch, precise) {
               },
             }
           );
-        search_results.players = await filter.filterTeams(teams.data.data);
+        search_results.teams = await filter.filterTeams(teams.data.data);
     }
     return search_results;
 }
