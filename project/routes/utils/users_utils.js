@@ -71,7 +71,7 @@ async function getFavoriteGames(username) {
 }
 
 async function deleteFavo(username, data) {
-  await DButils.execQuery(`delete from UserFavorite where username=${username} and targetID=${data.targetID} and type=${data.type}`);
+  await DButils.execQuery(`delete from UserFavorite where username=${username} and targetID=${data.targetID} and type='${data.type}'`);
 }
 
 exports.markPlayerAsFavorite = markPlayerAsFavorite;

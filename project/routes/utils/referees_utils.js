@@ -7,7 +7,7 @@ async function refereeDetails(refereeID) {
 }
 
 async function createReferee(data) {
-    await DButils.execQuery(`insert into Referees values('${data.firstname}', '${data.lastname}', '${data.nation}', false)`);
+    await DButils.execQuery(`insert into Referees values('${data.firstname}', '${data.lastname}', '${data.nation}', 'false')`);
 }
 
 async function getAllReferees() {

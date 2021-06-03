@@ -67,7 +67,7 @@ router.post("/favoriteGames", async (req, res, next) => {
 /**
  * This path returns the favorites players that were saved by the logged-in user
  */
-router.get("/favoritePlayers", async (req, res, next) => {
+router.get("/getfavoritePlayers", async (req, res, next) => {
   try {
     const username = req.session.username;
     const players = await users_utils.getFavoritePlayers(username);
@@ -78,7 +78,7 @@ router.get("/favoritePlayers", async (req, res, next) => {
   }
 });
 
-router.get("/favoriteTeams", async (req, res, next) => {
+router.get("/getfavoriteTeams", async (req, res, next) => {
   try {
     const username = req.session.username;
     const teams = await users_utils.getFavoriteTeams(username);
@@ -89,7 +89,7 @@ router.get("/favoriteTeams", async (req, res, next) => {
   }
 });
 
-router.get("/favoriteGames", async (req, res, next) => {
+router.get("/getfavoriteGames", async (req, res, next) => {
   try {
     const username = req.session.username;
     const games = await users_utils.getFavoriteGames(username);
@@ -99,9 +99,10 @@ router.get("/favoriteGames", async (req, res, next) => {
   }
 });
 
-router.delete("/users/deleteFavo/{targetID, type}", async (req, res, next) => {
+router.delete("/deleteFavo/:details", async (req, res, next) => {
     try {
-      await users_utils.deleteFavo(req.session.username, req.params);
+      let deleteDetails = JSON.parse(req.params.details);
+      await users_utils.deleteFavo(req.session.username, deleteDetails);
       res.status(200).send("Target was removed.")
     } catch (error) {
       next(error);

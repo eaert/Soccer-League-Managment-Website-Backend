@@ -53,4 +53,13 @@ router.get("/gameDetails/:gameID", async (req, res, next) => {
   }
 })
 
+router.get("/games/getGameLogs/:gameIDs", async (req, res, next) => {
+  try {
+    const gameLogArray = await games_utils.getGameLogsByGameID(JSON.parse(req.params.gameIDs))
+    res.send(gameLogArray);
+  } catch (error) {
+    next(error);
+  }
+})
+
 module.exports = router;

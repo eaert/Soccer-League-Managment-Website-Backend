@@ -146,7 +146,7 @@ paths:
           description: A new game has been added
         '400':
           description: Wrong inpute parameters
-  /users/favoriteTeams:
+  /users/getfavoriteTeams:
     get:
       tags:
         - User
@@ -161,7 +161,7 @@ paths:
                 type: object
         '404':
           description: User doesn't have Teams.
-  /users/favoritePlayers:
+  /users/getfavoritePlayers:
     get:
       tags:
         - User
@@ -176,7 +176,7 @@ paths:
                 type: object
         '404':
           description: User doesn't have Players.
-  /users/favoriteGames:
+  /users/getfavoriteGames:
     get:
       tags:
         - User
@@ -191,25 +191,18 @@ paths:
                 type: object
         '404':
           description: User doesn't have Gamse.
-  /users/deleteFavo/{targetID, type}:
+  /users/deleteFavo/:details:
     delete:
       tags:
         - User
       summary: Delete TargetID.
       description: Receive TargetID and type from client and remove them from Table.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                tragetID:
-                  type: integer
-                  example: 939
-                type:
-                  type: string
-                  example: player
+      parameters:
+        - in: params
+          name: details
+          type: array
+          required: true
+          description: ID of favorite to remove and its type
       responses:
         '200':
           description: Successfuly removed TargetID from table.
@@ -486,6 +479,14 @@ paths:
         - Game
       summary: Get Game.
       description: Get gameID from client and return his Teams.
+      parameters: 
+        - in: path
+          name: gameID
+          description: a specific game ID
+          required: true
+          schema:
+            type: integer
+            example: 1
       responses:
         '200':
           description: Successfuly return Game.
@@ -501,13 +502,22 @@ paths:
         - Game
       summary: Get Game logs
       description: Get Game logs for received games ID.
+      parameters: 
+        - in: path
+          name: gameIDs
+          description: an array of games IDs
+          required: true
+          schema:
+            type: array
       response:
         '200':
           description: Successfuly return Game Logs.
           content:
             application/json:
               schema:
-                type: object
+                type: array
+        '401':
+          description: An error been accur
   /players/playerDetails/:playerID:
     get:
       tags:

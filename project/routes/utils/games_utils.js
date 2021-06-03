@@ -64,11 +64,20 @@ async function gameDetails(gameID) {
 
 async function getGamesByTeamName(teamName) {
   try{
-    const games = await DButils.execQuery(`select * from Games where homeTeam=${teamName} or awayTeam=${teamName}`);
+    const games = await DButils.execQuery(`select * from Games where homeTeam='${teamName}' or awayTeam='${teamName}'`);
     return games;
   } catch (error) {
     return [];
   }
+}
+
+async function getGameLogsByGameID(gameIDs) {
+  var promises = [];
+  gameIDs.forEach(gameID => {
+    promises.push(DButils.execQuery(`select * from GameEvent where gameID=${gameID}`))
+  });
+  var gameLogArray = await Promise.all(promises);
+  return gameLogArray;
 }
 
 exports.isTeamExist = isTeamExist;
@@ -79,3 +88,4 @@ exports.setReferee = setReferee;
 exports.isRefereeExist = isRefereeExist;
 exports.addEventCale = addEventCale;
 exports.getGamesByTeamName = getGamesByTeamName;
+exports.getGameLogsByGameID = getGameLogsByGameID;
