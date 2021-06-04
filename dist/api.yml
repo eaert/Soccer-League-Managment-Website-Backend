@@ -78,6 +78,7 @@ paths:
             application/json:
               schema:
                 type: object
+                example: {league_name: leagueName, current_season_name: 123, current_stage_name: 1, next_game: object of next Game}
         '404':
           description: An Error been Accur.
   /users/favoritePlayers:
@@ -139,7 +140,7 @@ paths:
               properties:
                 game_id:
                   type: integer
-                  example: 0
+                  example: 1
         description: Inventory item to add
       responses:
         '201':
@@ -151,14 +152,15 @@ paths:
       tags:
         - User
       summary: Get User Teams.
-      description: Get User from client and return his Teams.
+      description: Get User from client cookie and return his Teams.
       responses:
         '200':
           description: Successfuly return User's Teams.
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                example: [favo1 object, favo2 object, favo3 object]
         '404':
           description: User doesn't have Teams.
   /users/getfavoritePlayers:
@@ -166,14 +168,15 @@ paths:
       tags:
         - User
       summary: Get User Players.
-      description: Get User from client and return his Players.
+      description: Get User from client cookie and return his Players.
       responses:
         '200':
           description: Successfuly return Use's Players.
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                example: [favo1 object, favo2 object, favo3 object]
         '404':
           description: User doesn't have Players.
   /users/getfavoriteGames:
@@ -181,14 +184,15 @@ paths:
       tags:
         - User
       summary: Get User Games.
-      description: Get User from client and return his Games.
+      description: Get User from client cookie and return his Games.
       responses:
         '200':
           description: Successfuly return User's Games.
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                example: [favo1 object, favo2 object, favo3 object]
         '404':
           description: User doesn't have Gamse.
   /users/deleteFavo/:details:
@@ -201,6 +205,7 @@ paths:
         - in: params
           name: details
           type: array
+          example: [1, player]
           required: true
           description: ID of favorite to remove and its type
       responses:
@@ -264,10 +269,13 @@ paths:
               properties:
                 gameID:
                   type: integer
+                  example: 1
                 homeTeamGoals:
                   type: integer
+                  example: 3
                 awayTeamGoals:
                   type: integer
+                  example: 4
       responses:
         '201':
           description: The score been updated.
@@ -410,6 +418,7 @@ paths:
           required: true
           schema:
             type: string
+            example: København
       responses:
         '200':
           description: Successfuly return Team's details.
@@ -422,7 +431,7 @@ paths:
                     type: object
                     description: team details
                   players:
-                    type: object
+                    type: array
                     description: team squad
                   coach:
                     type: object
@@ -442,6 +451,7 @@ paths:
           required: true
           schema:
             type: string
+            example: København
       responses:
         '200':
           description: Successfuly return Team's details.
@@ -464,13 +474,15 @@ paths:
           required: true
           schema:
             type: string
+            example: København
       responses:
         '200':
           description: Successfuly return Team's schedule.
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                example: [game1 object, game2 object]
         '404':
           description: Team doesn't exists or doesn't have schedule.
   /games/gameDetails/:gameID:
@@ -509,6 +521,7 @@ paths:
           required: true
           schema:
             type: array
+            example: [1, 2, 3]
       response:
         '200':
           description: Successfuly return Game Logs.
@@ -524,6 +537,14 @@ paths:
         - Player
       summary: Get Player.
       description: Get playerID from client and return his Teams.
+      parameters: 
+        - in: path
+          name: playerID
+          description: player ID
+          required: true
+          schema:
+            type: integer
+            example: 172104
       responses:
         '200':
           description: Successfuly return Game.
@@ -539,6 +560,14 @@ paths:
         - Coach
       summary: Get Coach.
       description: Get coachID from client and return his Teams.
+      parameters: 
+        - in: path
+          name: coachID
+          description: coach ID
+          required: true
+          schema:
+            type: integer
+            example: 1467946
       responses:
         '200':
           description: Successfuly return Coach.
@@ -554,13 +583,21 @@ paths:
         - Referee
       summary: Get Referee.
       description: Get Referee_id from client and return his details.
+      parameters: 
+        - in: path
+          name: Referee_id
+          description: Referee ID
+          required: true
+          schema:
+            type: integer
+            example: 1
       responses:
         '200':
           description: Successfuly return Referee.
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Referee'
         '404':
           description: Referee doesn't exists.
   /search:
@@ -577,9 +614,12 @@ paths:
               type: object
               properties:
                 freeSearch:
-                  type: array
+                  type: string
+                  example: John
                 precise:
-                  type: array
+                  type: string
+                  enum: [player, team, None]
+                  example: player
       responses:
         '200':
           description: Successfuly return results.
@@ -589,10 +629,10 @@ paths:
                 type: object
                 properties:
                   players: 
-                    type: object
+                    type: array
                     description: players search results
                   teams:
-                    type: object
+                    type: array
                     description: teams search results
         '404':
           description: An error been accur.
@@ -681,111 +721,156 @@ components:
       properties:
         teamID:
           type: integer
+          exmaple: 939
         teamname:
           type: string
+          example: Midtjylland
         shortname:
           type: string
+          example: FCM
         founded:
           type: integer
+          example: 1999
         logo:
           type: string
+          example: https://cdn.sportmonks.com/images//soccer/teams/11/939.png
     Player:
       type: object
       description: Model containing player info.
       properties:
         playerID:
           type: integer
+          example: 172104
         firstname:
           type: string
+          example: James
         lastname:
           type: string
+          example: Forrest
         playerteam:
-          type: object
-        position:
           type: string
+          example: Midtjylland
+        position:
+          type: integer
+          example: 3
         nation:
           type: string
+          example: Scotland
         birthday:
-          type: object
+          type: string
+          exmaple: 07/07/1991
         country:
           type: string
+          example: Scotland
         weight:
-          type: integer
+          type: string
+          example: 175 cm
         height:
-          type: integer
+          type: string
+          example: 70 kg
     Game:
       type: object
       description: Model containing game info.
       properties:
         gameID:
           type: integer
+          example: 1
         date:
           type: string
+          example: 2021-1-1
         hours:
           type: string
+          example: '21:45'
         homeTeam:
           type: string
+          example: København
         awayTeam:
           type: string
+          example: Silkeborg
         homeTeamGoals:
           type: integer
+          example: 1
         awayTeamGoals:
           type: integer
+          example: 2
         field:
           type: string
         referee:
           type: integer
+          example: 1
     Coach:
       type: object
       description: Model containing coach info.
       properties:
         coachID:
           type: integer
+          example: 1467946
         firstname:
           type: string
+          example: Neil
         lastname:
           type: string
+          example: Lennon
         nation:
           type: string
+          example: Northrn Ireland
         birthday:
-          type: object
+          type: string
+          example: 25/06/1971
         country:
           type: string
+          example: Northrn Ireland
     GameEvent:
       type: object
       properties:
         eventType:
           type: string
+          enum: ['YellowCard', 'RedCard', 'Offside', 'Foul', 'Injury', 'Substitution', 'Goal']
+          example: YellowCard
         gameMinute:
           type: integer
+          example: 90
         gameID:
           type: integer
+          example: 1
         playerID:
           type: integer
+          example: 172104
     Referee:
       type: object
       properties:
         refereeID:
           type: integer
+          example: 1
         firstname:
           type: string
+          example: Dolif
         lastname:
           type: string
+          example: German
         nation:
           type: string
+          example: USA
         occupied:
           type: string
+          example: 'false'
     League:
       type: object
       properties:
         leagueID:
           type: integer
+          example: 1
         leagueName:
           type: string
+          example: SuperLiga
         roundNum:
           type: integer
+          example: 2
         mechanismPlacement:
           type: integer
+          enum: [1, 2]
+          example: 1
         Representative:
           type: string
+          example: SLRep
         

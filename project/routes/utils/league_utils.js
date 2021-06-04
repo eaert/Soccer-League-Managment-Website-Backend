@@ -13,7 +13,7 @@ async function getLeagueDetails() {
       },
     }
   );
-  const stage = await axios.get(
+  var stage = await axios.get(
     `https://soccer.sportmonks.com/api/v2.0/stages/${league.data.data.current_stage_id}`,
     {
       params: {
@@ -21,6 +21,9 @@ async function getLeagueDetails() {
       },
     }
   );
+  if (!stage) {
+    stage = await DButils.execQuery('select roundNum from Leagues where leagueID=1');
+  }
   const roundNum = (await DButils.execQuery(`select roundNum from Leagues where leagueID=3`))[0].roundNum;
   const month = Math.floor((roundNum * 7)/28) + 1
   const day = ((roundNum - 1) * 7) - ((month - 1) * 28) + 1
