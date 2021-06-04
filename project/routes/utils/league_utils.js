@@ -44,53 +44,29 @@ async function createLeague(data) {
   );
 }
 
-async function createGameLog(data) {
-  // const mechanism = await DButils.execQuery(`select mechanismPlacement from Leagues where leagueID=${data.leagueID}`);
-  // const teams = await DButils.execQuery(`select teamName from Teams where leagueID=${data.leagueID}`);
+async function createGameLog(leagueID) {
+  const mechanism = await DButils.execQuery(`select mechanismPlacement from Leagues where leagueID=${leagueID}`);
+  const teams = await DButils.execQuery(`select teamName, venue from Teams where leagueID=${leagueID}`);
 
-  // let promises = [];
-  // var teamsData = []
-  // var ID = 1;
-  // teams.forEach(team => {
-  //   teamsData.push({id: ID++, name: team.teamName})
-  // });
-  
-  // teams.forEach(homeTeam => {
-  //   let seasonDetails = {
-  //     year: '2021',
-  //     month: '1',
-  //     day: '1'
-  //   }
-  //   var index = 0;
-  //   teams.forEach(awayTeam => {
-  //     if (homeTeam === awayTeam) {
-  //       return;
-  //     } else {
-  //       while (teamsDayTaken[index].includes(homeTeam.teamName) || teamsDayTaken[index].includes(awayTeam.teamName)) {
-  //         seasonDetails = dateManager(seasonDetails);
-  //         index++;
-  //         if (index === teamsDayTaken.length) {
-  //           teamsDayTaken.push([]);
-  //         }
-  //       }
+  let promises = [];
 
-  //       var date = `${seasonDetails.year}-${seasonDetails.month}-${seasonDetails.day}`;
-  //       promises.push(
-  //         DButils.execQuery(`insert into Games values('${date}', '21:45', '${homeTeam.teamName}', '${awayTeam.teamName}', -1, -1, '${'Stadium'}', 0)`)
-  //       )
-  //       teamsDayTaken[index].push(homeTeam.teamName);
-  //       teamsDayTaken[index].push(awayTeam.teamName);
-  //       index = 0;
-  //       seasonDetails = {
-  //         year: '2021',
-  //         month: '1',
-  //         day: '1'
-  //       }
-        
-  //     }
-  //   });
-  // });
-  // await Promise.all(promises);
+  const stages = roundRobin(teams, mechanism[0].mechanismPlacement);
+
+  let seasonDetails = {
+    year: '2021',
+    month: '6',
+    day: '6'
+  }
+  stages.forEach(stage => {
+    stage.forEach(game => {
+      var date = `${seasonDetails.year}/${seasonDetails.month}/${seasonDetails.day}`;
+        promises.push(
+          DButils.execQuery(`insert into Games values('${date}', '21:45', '${game[0].teamName}', '${game[1].teamName}', -1, -1, '${game[0].venue}', 0)`)
+        )
+    });
+    seasonDetails = dateManager(seasonDetails);
+  });
+  await Promise.all(promises);
 }
 
 function dateManager(seasonDetails) {
@@ -109,6 +85,64 @@ function dateManager(seasonDetails) {
   }
   return seasonDetails;
 }
+
+function roundRobin(teams, mechanism){
+  let scheduling = [];
+  let scheduling_opposite = []
+  if (teams.length % 2 != 0){
+      throw { status: 409, message: "Number of teams must be even."};
+  }
+  mid = teams.length/2;
+  let left = [];
+  let right = [];
+  teams.forEach(function(element, index) {
+      if (index<mid){
+          left.push(element);
+      }
+      else{
+          right.push(element);
+      }
+  });
+  let end_loop = right[0];
+  let stop_flag = false;
+  //start loop
+  while(!stop_flag){
+      let round = [];
+      let round_oppo = [];
+      temp = left[1];
+      for (i=1; i<left.length-1; i++){
+          left[i] = left[i+1];
+      }
+      left[left.length-1] = right[right.length-1]
+      for (i=right.length-1; i>0; i--){
+          right[i] = right[i-1];
+      }
+      right[0] = temp;
+      for (i=0; i<left.length; i++){
+          if(left.includes(10000000000000000) || right.includes(10000000000000000)){
+              continue;
+          }
+          round.push([left[i],right[i]])
+          round_oppo.push([right[i],left[i]])
+      }
+      scheduling.push(round);
+      scheduling_opposite.push(round_oppo);
+      if (right[0]==end_loop){
+          stop_flag = true;
+      }
+  }
+  let scheduling_final;
+  if (mechanism == 2){
+      scheduling_final = scheduling.concat(scheduling_opposite);
+  }
+  else{
+      scheduling_final = scheduling;
+  }
+  return scheduling_final;
+}
+arr = [0,1,2,3,4,5,6,7,8,9,10,11]
+roundRobin(arr);
+
 
 exports.getLeagueDetails = getLeagueDetails;
 exports.createLeague = createLeague;

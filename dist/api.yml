@@ -235,25 +235,13 @@ paths:
     post:
       tags:
         - Representative
-      summary: Create Leageue Game Log
-      description: Receive Representative League ID and creat Game Log using League's mechanismPlacement.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                leagueID:
-                  type: string
-                  description: League ID
-                  example: 1
-
+      summary: Create League Game Log
+      description: Receive Representative request and create Game Log using League's mechanismPlacement.
       responses:
         '201':
           description: Game Log been created Successfuly.
         '400':
-          description: League doesn't exists
+          description: An issue been accur
   /users/Representative/updateScore:
     put:
       tags:

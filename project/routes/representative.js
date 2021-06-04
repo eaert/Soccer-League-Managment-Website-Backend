@@ -8,9 +8,10 @@ const referees_utils = require("./utils/referees_utils");
 
 router.use(async function (req, res, next) { 
   if (req.session && req.session.username) {
-    DButils.execQuery("SELECT Representative FROM Leagues")
+    DButils.execQuery("SELECT leagueID, Representative FROM Leagues")
       .then((Representative) => {
         if (Representative.find((x) => x.Representative === req.session.username)) {
+            req.session.leagueID = Representative[0].leagueID;
             next();
         }
       })
@@ -31,7 +32,7 @@ router.post("/addGame", async (req, res, next) => {
 
 router.post("/createGameLog", async (req, res, next) => {
     try {
-      await league_utils.createGameLog(req.body);
+      await league_utils.createGameLog(req.session.leagueID);
       res.status(201).send("League's game log successfully created");
     } catch (error) {
       next(error);
