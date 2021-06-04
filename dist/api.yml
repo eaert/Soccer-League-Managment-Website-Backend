@@ -641,6 +641,31 @@ paths:
           description: League been created Successfuly.
         '400':
           description: Wrong inpute
+  /leagues/getLeagueStageGames/:leagueID:
+    get:
+      tags:
+        - League
+      summary: get League stage games
+      description: Receive league ID from client and return its stage games.
+      parameters: 
+        - in: path
+          name: leagueID
+          description: league ID
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Successfuly return Stage's Games.
+          content:
+            application/json:
+              schema:
+                type: array
+                description: array of Stage's Games.
+                example: [game1 object, game2 object]
+        '400':
+          description: Leagu doesn't exists
 components:
   schemas:
     User:

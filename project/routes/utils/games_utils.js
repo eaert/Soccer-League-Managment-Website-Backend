@@ -80,6 +80,11 @@ async function getGameLogsByGameID(gameIDs) {
   return gameLogArray;
 }
 
+async function getGames(date) {
+  const games = await DButils.execQuery(`select * from Games where date='${date}'`);
+  return games;
+}
+
 exports.isTeamExist = isTeamExist;
 exports.createGame = createGame;
 exports.gameDetails = gameDetails;
@@ -89,3 +94,4 @@ exports.isRefereeExist = isRefereeExist;
 exports.addEventCale = addEventCale;
 exports.getGamesByTeamName = getGamesByTeamName;
 exports.getGameLogsByGameID = getGameLogsByGameID;
+exports.getGames = getGames;

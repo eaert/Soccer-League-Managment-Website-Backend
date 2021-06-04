@@ -140,10 +140,24 @@ function roundRobin(teams, mechanism){
   }
   return scheduling_final;
 }
-arr = [0,1,2,3,4,5,6,7,8,9,10,11]
-roundRobin(arr);
+
+async function getLeagueStageDate(leagueID) {
+  const stageNum = await DButils.execQuery(`select roundNum from Leagues where leagueID=${leagueID}`);
+  let seasonDetails = {
+    year: '2021',
+    month: '6',
+    day: '6'
+  }
+  for (let i=0;i<stageNum[0].roundNum-1;i++) {
+    seasonDetails = dateManager(seasonDetails);
+  }
+  var date = `${seasonDetails.year}/${seasonDetails.month}/${seasonDetails.day}`;
+  const games = games_utils.getGames(date);
+  return games;
+}
 
 
 exports.getLeagueDetails = getLeagueDetails;
 exports.createLeague = createLeague;
 exports.createGameLog = createGameLog;
+exports.getLeagueStageDate = getLeagueStageDate;

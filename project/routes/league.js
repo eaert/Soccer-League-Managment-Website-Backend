@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const league_utils = require("./utils/league_utils");
+const games_utils = require("./utils/games_utils");
 
 router.get("/getDetails", async (req, res, next) => {
   try {
@@ -19,5 +20,14 @@ router.post("/createLeague", async (req, res, next) => {
     next(error);
   }
 });
+
+router.get("/getLeagueStageGames/:leagueID", async (req, res, next) => {
+  try {
+    const games = await league_utils.getLeagueStageDate(req.params.leagueID);
+    res.send(games);
+  } catch (error) {
+    next(error);
+  }
+})
 
 module.exports = router;
