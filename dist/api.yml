@@ -160,6 +160,8 @@ paths:
             application/json:
               schema:
                 type: array
+                items:
+                  type: object
                 example: [favo1 object, favo2 object, favo3 object]
         '404':
           description: User doesn't have Teams.
@@ -176,6 +178,8 @@ paths:
             application/json:
               schema:
                 type: array
+                items:
+                  type: object
                 example: [favo1 object, favo2 object, favo3 object]
         '404':
           description: User doesn't have Players.
@@ -192,6 +196,8 @@ paths:
             application/json:
               schema:
                 type: array
+                items:
+                  type: object
                 example: [favo1 object, favo2 object, favo3 object]
         '404':
           description: User doesn't have Gamse.
@@ -420,6 +426,8 @@ paths:
                     description: team details
                   players:
                     type: array
+                    items:
+                      type: object
                     description: team squad
                   coach:
                     type: object
@@ -470,6 +478,8 @@ paths:
             application/json:
               schema:
                 type: array
+                items:
+                  type: object
                 example: [game1 object, game2 object]
         '404':
           description: Team doesn't exists or doesn't have schedule.
@@ -509,14 +519,18 @@ paths:
           required: true
           schema:
             type: array
+            items:
+              type: integer
             example: [1, 2, 3]
-      response:
+      responses:
         '200':
           description: Successfuly return Game Logs.
           content:
             application/json:
               schema:
                 type: array
+                items:
+                  type: object
         '401':
           description: An error been accur
   /players/playerDetails/:playerID:
@@ -618,9 +632,13 @@ paths:
                 properties:
                   players: 
                     type: array
+                    items:
+                      type: object
                     description: players search results
                   teams:
                     type: array
+                    items:
+                      type: object
                     description: teams search results
         '404':
           description: An error been accur.
@@ -662,6 +680,8 @@ paths:
             application/json:
               schema:
                 type: array
+                items:
+                  type: object
                 description: array of Stage's Games.
                 example: [game1 object, game2 object]
         '400':
@@ -752,7 +772,7 @@ components:
           example: https://cloudinary.com/USER
         gameID:
           type: integer
-          discription: game to set Referee to
+          description: game to set Referee to
           example: 1
     LoginUser:
       type:  object
@@ -779,7 +799,8 @@ components:
       properties:
         teamID:
           type: integer
-          exmaple: 939
+          description: team ID
+          example: 939
         teamname:
           type: string
           example: Midtjylland
@@ -816,7 +837,7 @@ components:
           example: Scotland
         birthday:
           type: string
-          exmaple: 1995/07/07
+          example: 1995/07/07
         country:
           type: string
           example: Scotland
@@ -919,4 +940,3 @@ components:
         Representative:
           type: string
           example: SLRep
-        
