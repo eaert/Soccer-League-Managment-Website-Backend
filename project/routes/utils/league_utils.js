@@ -13,27 +13,29 @@ async function getLeagueDetails() {
       },
     }
   );
-  var stage = await axios.get(
-    `https://soccer.sportmonks.com/api/v2.0/stages/${league.data.data.current_stage_id}`,
-    {
-      params: {
-        api_token: process.env.api_token,
-      },
-    }
-  );
-  if (!stage) {
+  if (league.data.data.current_stage_id) {
+    var stage = await axios.get(
+      `https://soccer.sportmonks.com/api/v2.0/stages/${league.data.data.current_stage_id}`,
+      {
+        params: {
+          api_token: process.env.api_token,
+        },
+      }
+    );
+    stage = stage.data.data.name;
+  } else {
     stage = await DButils.execQuery('select roundNum from Leagues where leagueID=1');
   }
-  const roundNum = (await DButils.execQuery(`select roundNum from Leagues where leagueID=3`))[0].roundNum;
-  const month = Math.floor((roundNum * 7)/28) + 1
-  const day = ((roundNum - 1) * 7) - ((month - 1) * 28) + 1
-  const roundDate = `2021-${month}-${day}`
-  const nextGame = (await DButils.execQuery(`select * from Games where date='${roundDate}'`))[0]
+  const roundNum = (await DButils.execQuery(`select roundNum from Leagues where leagueID=1`))[0].roundNum;
+  const month = 6 + Math.floor((roundNum * 7)/28)
+  const day = 6 + ((roundNum - 1) * 7) - ((month - 6) * 28)
+  const roundDate = `2021/${month}/${day}`
+  const nextGames = await DButils.execQuery(`select * from Games where date='${roundDate}'`)
   return {
     league_name: league.data.data.name,
     current_season_name: league.data.data.season.data.name,
-    current_stage_name: stage.data.data.name,
-    next_game: nextGame
+    current_stage_name: stage,
+    next_game: nextGames[0]
   };
 }
 

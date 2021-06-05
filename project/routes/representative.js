@@ -69,11 +69,7 @@ router.put("/setReferee", async (req, res, next) => {
 router.post("/signupReferee", async (req, res, next) => {
   try {
     await auth_utils.Register(req.body);
-    await referees_utils.createReferee({
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      nation: req.body.country
-    })
+    await referees_utils.createReferee(req.body)
     console.log("Invitation was sent to: " + req.body.email);
     res.status(201).send("Referee created and email was sent.")
   } catch (error) {

@@ -298,7 +298,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/RefereeUser'
         description: Inventory item to add
       responses:
         '201':
@@ -709,6 +709,51 @@ components:
           format: URL
           description: URL for the user's image profile.
           example: https://cloudinary.com/USER
+    RefereeUser:
+      type:  object
+      description: Model containing user info.
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 8
+          description: Username must be between 3 to 9 and as letters only.
+          example: Dolif
+        firstname:
+          type: string
+          description: User's First Name
+          example: Dolev
+        lastname:
+          type: string
+          description: User's Last Name
+          example: German
+        country:
+          type: string
+          description: User's country
+          example: USA
+        password:
+          type: string
+          format: password
+          minLength: 5
+          maxLength: 10
+          description: >
+            password must contain 5 to 12 chars,
+            and contains digits and chars.
+          example: superME@1
+        email:
+          type: string
+          format: email
+          description: User's email
+          example: google@google.com
+        image_url:
+          type: string
+          format: URL
+          description: URL for the user's image profile.
+          example: https://cloudinary.com/USER
+        gameID:
+          type: integer
+          discription: game to set Referee to
+          example: 1
     LoginUser:
       type:  object
       description: Model containing Login info.
@@ -771,7 +816,7 @@ components:
           example: Scotland
         birthday:
           type: string
-          exmaple: 07/07/1991
+          exmaple: 1995/07/07
         country:
           type: string
           example: Scotland
@@ -785,12 +830,9 @@ components:
       type: object
       description: Model containing game info.
       properties:
-        gameID:
-          type: integer
-          example: 1
         date:
           type: string
-          example: 2021-1-1
+          example: 2021/6/6
         hours:
           type: string
           example: '21:45'
@@ -829,7 +871,7 @@ components:
           example: Northrn Ireland
         birthday:
           type: string
-          example: 25/06/1971
+          example: 1971/06/25
         country:
           type: string
           example: Northrn Ireland
@@ -852,9 +894,6 @@ components:
     Referee:
       type: object
       properties:
-        refereeID:
-          type: integer
-          example: 1
         firstname:
           type: string
           example: Dolif
@@ -864,15 +903,9 @@ components:
         nation:
           type: string
           example: USA
-        occupied:
-          type: string
-          example: 'false'
     League:
       type: object
       properties:
-        leagueID:
-          type: integer
-          example: 1
         leagueName:
           type: string
           example: SuperLiga
