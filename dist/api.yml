@@ -103,6 +103,8 @@ paths:
           description: A new player has been added
         '400':
           description: Wrong inpute parameters
+        '405':
+          description: Target is already a Favorite Player
   /users/favoriteTeams:
     post:
       tags:
@@ -125,6 +127,8 @@ paths:
           description: A new team has been added
         '400':
           description: Wrong inpute parameters
+        '405':
+          description: Target is already a Favorite Team
   /users/favoriteGames:
     post:
       tags:
@@ -147,6 +151,8 @@ paths:
           description: A new game has been added
         '400':
           description: Wrong inpute parameters
+        '405':
+          description: Target is already a Favorite Game
   /users/getfavoriteTeams:
     get:
       tags:

@@ -1,9 +1,9 @@
 const axios = require("axios");
 const DButils = require("./DButils");
 
-async function coachDetailsByTeamName(teamName) {
+async function coachDetailsByTeamName(teamID) {
     const coach = await axios.get(
-        `${process.env.api_domain}/teams/search/${teamName}`,
+        `${process.env.api_domain}/teams/${teamID}`,
         {
           params: {
             include: 'coach',
@@ -12,7 +12,7 @@ async function coachDetailsByTeamName(teamName) {
         }
     );
     let team = coach.data.data.name;
-    coach.data.data = coach.data.data[0].coach.data;
+    coach.data.data = coach.data.data.coach.data;
     coach.data.data.name = team;
     return extractRelevantCoachData(coach);
 }

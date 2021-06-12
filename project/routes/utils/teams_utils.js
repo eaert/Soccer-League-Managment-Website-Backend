@@ -2,15 +2,16 @@ const axios = require("axios");
 const DButils = require("./DButils");
 
 async function teamDetails(teamName) {
+    const teamDB = await DButils.execQuery(`select teamID from Teams where teamName='${teamName}'`);
     const team = await axios.get(
-        `${process.env.api_domain}/teams/search/${teamName}`,
+        `${process.env.api_domain}/teams/${teamDB[0].teamID}`,
         {
           params: {
             api_token: process.env.api_token,
           },
         }
       );
-      team.data.data = team.data.data[0];
+      team.data.data = team.data.data;
     return extractRelevantTeamData([team]);
 }
 
