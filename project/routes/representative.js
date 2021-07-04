@@ -21,6 +21,14 @@ router.use(async function (req, res, next) {
   }
 });
 
+router.get("/isRep", async (req, res, next) => {
+  try {
+    res.status(200).send(true);
+  } catch (error) {
+    next(error);
+  }
+})
+
 router.post("/addGame", async (req, res, next) => {
     try {
       await game_utils.createGame(req.body);

@@ -13,30 +13,81 @@ async function getLeagueDetails() {
       },
     }
   );
-  if (league.data.data.current_stage_id) {
-    var stage = await axios.get(
-      `https://soccer.sportmonks.com/api/v2.0/stages/${league.data.data.current_stage_id}`,
-      {
-        params: {
-          api_token: process.env.api_token,
-        },
-      }
-    );
-    stage = stage.data.data.name;
-  } else {
+  // if (league.data.data.current_stage_id) {
+  //   var stage = await axios.get(
+  //     `https://soccer.sportmonks.com/api/v2.0/stages/${league.data.data.current_stage_id}`,
+  //     {
+  //       params: {
+  //         api_token: process.env.api_token,
+  //       },
+  //     }
+  //   );
+  //   stage = stage.data.data.name;
+  // } else {
     stage = await DButils.execQuery('select roundNum from Leagues where leagueID=1');
-  }
+  // }
   const roundNum = (await DButils.execQuery(`select roundNum from Leagues where leagueID=1`))[0].roundNum;
-  const month = 6 + Math.floor((roundNum * 7)/28)
-  const day = 6 + ((roundNum - 1) * 7) - ((month - 6) * 28)
-  const roundDate = `2021/${month}/${day}`
-  const nextGames = await DButils.execQuery(`select * from Games where date='${roundDate}'`)
+  const nextGames = await Games(roundNum);
   return {
     league_name: league.data.data.name,
     current_season_name: league.data.data.season.data.name,
     current_stage_name: stage,
     next_game: nextGames[0]
   };
+}
+
+async function getLeagueFullDetails() {
+  const league = await axios.get(
+    `https://soccer.sportmonks.com/api/v2.0/leagues/${LEAGUE_ID}`,
+    {
+      params: {
+        include: "season",
+        api_token: process.env.api_token,
+      },
+    }
+  );
+  const teams = await axios.get(
+    `https://soccer.sportmonks.com/api/v2.0/teams/season/${process.env.season_id}`,
+    {
+      params: {
+        api_token: process.env.api_token,
+      },
+    }
+  );
+  stage = await DButils.execQuery('select roundNum from Leagues where leagueID=1');
+  const roundNum = (await DButils.execQuery(`select roundNum from Leagues where leagueID=1`))[0].roundNum;
+  const nextGames = await Games(roundNum);
+  var prevGames = [];
+  if (roundNum > 1) {
+    prevGamesData = await Games(roundNum-1);
+    var gamesID = [];
+    for (let index = 0; index < prevGamesData.length; index++) {
+      gamesID.push(prevGamesData[index].gameID);
+    }
+    var gameLog = await games_utils.getGameLogsByGameID(gamesID);
+    for (let index = 0; index < prevGamesData.length; index++) {
+      prevGames.push({
+        game: prevGamesData[index],
+        log: gameLog[index]
+      })
+    }
+  }
+  return {
+    league_name: league.data.data.name,
+    current_season_name: league.data.data.season.data.name,
+    current_stage_name: stage,
+    teams: teams.data.data,
+    next_games: nextGames,
+    prev_games: prevGames
+  };
+}
+
+async function Games(roundNum) {
+  const month = 6 + Math.floor((roundNum * 7)/28)
+  const day = 6 + ((roundNum - 1) * 7) - ((month - 6) * 28)
+  const roundDate = `2021/${month}/${day}`
+  const Games = await DButils.execQuery(`select * from Games where date='${roundDate}'`)
+  return Games;
 }
 
 async function createLeague(data) {
@@ -160,6 +211,7 @@ async function getLeagueStageDate(leagueID) {
 
 
 exports.getLeagueDetails = getLeagueDetails;
+exports.getLeagueFullDetails = getLeagueFullDetails;
 exports.createLeague = createLeague;
 exports.createGameLog = createGameLog;
 exports.getLeagueStageDate = getLeagueStageDate;

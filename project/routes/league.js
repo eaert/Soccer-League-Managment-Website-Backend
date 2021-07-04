@@ -12,6 +12,15 @@ router.get("/getDetails", async (req, res, next) => {
   }
 });
 
+router.get("/getFullDetails", async (req, res, next) => {
+  try {
+    const league_details = await league_utils.getLeagueFullDetails();
+    res.send(league_details);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post("/createLeague", async (req, res, next) => {
   try {
     await league_utils.createLeague(req.body);
