@@ -92,7 +92,12 @@ async function getFavoriteGames(username) {
 }
 
 async function deleteFavo(username, data) {
-  await DButils.execQuery(`delete from UserFavorite where username='${username}' and targetID=${data.targetID} and type='${data.type}'`);
+  await DButils.execQuery(`delete from UserFavorite where username='${username}' and targetID=${data[0]} and type='${data[1]}'`);
+}
+
+async function getAllUserFavo(username) {
+  var items = await DButils.execQuery(`select targetID, type from UserFavorite where username='${username}'`);
+  return items;
 }
 
 exports.markPlayerAsFavorite = markPlayerAsFavorite;
@@ -102,3 +107,4 @@ exports.getFavoritePlayers = getFavoritePlayers;
 exports.getFavoriteTeams = getFavoriteTeams;
 exports.getFavoriteGames = getFavoriteGames;
 exports.deleteFavo = deleteFavo;
+exports.getAllUserFavo = getAllUserFavo;

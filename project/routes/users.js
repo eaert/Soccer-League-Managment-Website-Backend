@@ -107,6 +107,15 @@ router.delete("/deleteFavo/:details", async (req, res, next) => {
     } catch (error) {
       next(error);
     }
+});
+
+router.get("/AllUserFavo/:username", async (req, res, next) => {
+  try {
+    var items = await users_utils.getAllUserFavo(req.username);
+    res.send(items);
+  } catch (error) {
+    next(error);
+  }
 })
 
 module.exports = router;

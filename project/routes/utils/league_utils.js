@@ -209,9 +209,16 @@ async function getLeagueStageDate(leagueID) {
   return games;
 }
 
+async function leagueTeams() {
+  const teams = await DButils.execQuery('select teamName, venue from Teams')
+  return teams;
+}
+
 
 exports.getLeagueDetails = getLeagueDetails;
 exports.getLeagueFullDetails = getLeagueFullDetails;
 exports.createLeague = createLeague;
 exports.createGameLog = createGameLog;
 exports.getLeagueStageDate = getLeagueStageDate;
+exports.leagueTeams = leagueTeams;
+exports.dateManager = dateManager;

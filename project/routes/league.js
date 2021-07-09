@@ -37,6 +37,15 @@ router.get("/getLeagueStageGames/:leagueID", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+router.get("/getAllLeagueTeams", async (req, res, next) => {
+  try {
+    const teams = await league_utils.leagueTeams();
+    res.send(teams);
+  } catch (error) {
+    next(error);
+  }
 })
 
 module.exports = router;

@@ -241,6 +241,28 @@ paths:
           description: Successfuly removed TargetID from table.
         '404':
           description: an Error been accur.
+  /AllUserFavo/:username:
+    get:
+      tags:
+        - User
+      summary: Return all User's Favorite items
+      description: Receive Username and return all of its Favorite items
+      parameters:
+        - in: params
+          name: username
+          type: string
+          example: 'SLRep'
+          required: true
+          description: Username to return its Favorite items
+      response:
+        '200':
+          description: Array of Favo ID and type pairs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
   /users/Representative/isRep:
     get:
       tags:
@@ -249,7 +271,7 @@ paths:
       description: Receive a request to check if online User is a League Rep
       response:
         '200':
-          description: "User is a League Rep"
+          description: User is a League Rep
           content:
             application/json:
               schema:
@@ -721,6 +743,25 @@ paths:
                 example: [game1 object, game2 object]
         '400':
           description: Leagu doesn't exists
+  /leagues/getAllLeagueTeams:
+    get:
+      tags:
+        - League
+      summary: get League's Teams
+      description: Return all League's Team names
+      responses:
+        '200':
+          description: Successfuly return League's Teams.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                description: array of Teams's names.
+                example: [Hapoel, Macbi]
+        '400':
+          description: An error been accur
 components:
   schemas:
     User:

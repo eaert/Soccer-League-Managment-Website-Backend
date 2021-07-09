@@ -67,6 +67,7 @@ async function playerDetails(playerID) {
       playerID: player.data.data.player_id,
       firstname: player.data.data.firstname,
       lastname: player.data.data.lastname,
+      image: player.data.data.image_path,
       playerteam: player.data.data.team.data.name,
       position: player.data.data.position_id,
       nation: player.data.data.nationality,

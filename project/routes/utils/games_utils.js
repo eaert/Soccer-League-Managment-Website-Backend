@@ -1,5 +1,6 @@
 const DButils = require("./DButils");
 const axios = require("axios");
+const league_utils = require("./league_utils");
 
 // will move to team utils later
 async function isTeamExist(teamName) {
@@ -65,7 +66,32 @@ async function gameDetails(gameID) {
 async function getGamesByTeamName(teamName) {
   try{
     const games = await DButils.execQuery(`select * from Games where homeTeam='${teamName}' or awayTeam='${teamName}'`);
-    return games;
+    const stageNum = await DButils.execQuery(`select roundNum from Leagues where leagueID=1`);
+    let seasonDetails = {
+      year: '2021',
+      month: '6',
+      day: '6'
+    }
+    for (let i=0;i<stageNum[0].roundNum-1;i++) {
+      seasonDetails = league_utils.dateManager(seasonDetails);
+    }
+    var splitGames = {
+      prev: [],
+      next: []
+    }
+    games.forEach(game => {
+      var date = (game.date).split('/')
+      if (parseInt(date[1]) <= parseInt(seasonDetails.month)) {
+        if (parseInt(date[2]) < parseInt(seasonDetails.day)){
+          splitGames.prev.push(game);
+        } else {
+          splitGames.next.push(game);
+        }
+      } else {
+        splitGames.next.push(game);
+      }
+    });
+    return splitGames;
   } catch (error) {
     return [];
   }
