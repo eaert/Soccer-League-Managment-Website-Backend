@@ -49,6 +49,10 @@ router.post("/createGameLog", async (req, res, next) => {
 
 router.put("/updateScore", async (req, res, next) => {
     try {
+        var game = await game_utils.gameDetails(req.body.gameID);
+        if (game.length == 0) {
+          throw { status: 400, message: 'Game ID does not exist'};
+        }
         await game_utils.updateGameScore(req.body);
         res.status(201).send("The score been updated")
     } catch (error) {
