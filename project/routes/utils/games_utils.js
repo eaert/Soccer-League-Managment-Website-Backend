@@ -78,12 +78,13 @@ async function getGamesByTeamName(teamName) {
     var splitGames = {
       prev: [],
       next: []
-    }
+    };
+    var tempPrev = [];
     games.forEach(game => {
       var date = (game.date).split('/')
       if (parseInt(date[1]) <= parseInt(seasonDetails.month)) {
         if (parseInt(date[2]) < parseInt(seasonDetails.day)){
-          splitGames.prev.push(game);
+          tempPrev.push(game);
         } else {
           splitGames.next.push(game);
         }
@@ -91,6 +92,19 @@ async function getGamesByTeamName(teamName) {
         splitGames.next.push(game);
       }
     });
+    if (stageNum[0].roundNum > 1) {
+      var gamesID = [];
+      for (let index = 0; index < tempPrev.length; index++) {
+        gamesID.push(tempPrev[index].gameID);
+      }
+      var gameLog = await getGameLogsByGameID(gamesID);
+      for (let index = 0; index < tempPrev.length; index++) {
+        splitGames.prev.push({
+          game: tempPrev[index],
+          log: gameLog[index]
+        })
+      }
+    }
     return splitGames;
   } catch (error) {
     return [];
